@@ -46,10 +46,10 @@ P=0.2
 # ==================================================
 class Bird:
     def __init__(self):
-        self.fall_image=pygame.image.load("Flappy bird/assets/yellowbird-upflap.png")
+        self.fall_image=pygame.image.load("Flappy_bird/assets/yellowbird-upflap.png")
         self.fall_image=pygame.transform.scale2x(self.fall_image)
         self.rect=self.fall_image.get_rect(center=(100,300))       
-        self.tap_image=pygame.image.load("Flappy bird/assets/yellowbird-downflap.png")
+        self.tap_image=pygame.image.load("Flappy_bird/assets/yellowbird-downflap.png")
         self.tap_image=pygame.transform.scale2x(self.tap_image)
         self.swap=False
         self.velocity=0
@@ -130,8 +130,8 @@ class Score:
     def __init__(self):
         self.value=0
         self.h_value=0
-        self.font=pygame.font.Font("Flappy bird/04B_19.TTF",40)
-        self.h_font=pygame.font.Font("Flappy bird/04B_19.TTF",50)
+        self.font=pygame.font.Font("Flappy_bird/04B_19.TTF",40)
+        self.h_font=pygame.font.Font("Flappy_bird/04B_19.TTF",50)
 
     def update(self):
         self.value+=1
@@ -152,23 +152,23 @@ class Score:
 
 class Sound:
     def __init__(self):
-        self.jump_sound=pygame.mixer.Sound("Flappy bird/sound/sfx_wing.wav")
-        self.die_sound=pygame.mixer.Sound("Flappy bird/sound/sfx_die.wav")
-        self.hit_sound=pygame.mixer.Sound("Flappy bird/sound/sfx_hit.wav")
-        self.point_sound=pygame.mixer.Sound("Flappy bird/sound/sfx_point.wav")
-        self.fall_sound=pygame.mixer.Sound("Flappy bird/sound/sfx_swooshing.wav")
-
+        self.jump_sound=pygame.mixer.Sound("Flappy_bird/sound/sfx_wing.wav")
+        self.die_sound=pygame.mixer.Sound("Flappy_bird/sound/sfx_die.wav")
+        self.hit_sound=pygame.mixer.Sound("Flappy_bird/sound/sfx_hit.wav")
+        self.point_sound=pygame.mixer.Sound("Flappy_bird/sound/sfx_point.wav")
+        self.fall_sound=pygame.mixer.Sound("Flappy_bird/sound/sfx_swooshing.wav")
+        self.victory_sound=pygame.mixer.Sound("Flappy_bird/sound/sfx_end.mp3")
 
 class Game:
     def __init__(self):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Flappy Bird")
+        pygame.display.set_caption("Flappy_bird")
 
         icon, self.background, floor_img = load_assets()
         pygame.display.set_icon(icon)
-        self.pipe_image = pygame.image.load("Flappy bird/assets/pipe-green.png")
+        self.pipe_image = pygame.image.load("Flappy_bird/assets/pipe-green.png")
         self.pipe_image = pygame.transform.scale2x(self.pipe_image)
 
         self.pipes = []
@@ -263,8 +263,11 @@ class Game:
         self.run()
 
     def game_over(self):
-        if self.score.h_value<self.score.value: self.score.h_value=self.score.value
-        self.screen_end=pygame.image.load("Flappy bird/assets/message.png")
+        if self.score.h_value<self.score.value: 
+            self.score.h_value=self.score.value
+            self.sound.victory_sound.play()
+
+        self.screen_end=pygame.image.load("Flappy_bird/assets/message.png")
         self.screen_end=pygame.transform.scale2x(self.screen_end)
         game_over=True;
         while game_over:
@@ -289,12 +292,12 @@ class Game:
 # FUNCTIONS
 # ==================================================
 def load_assets():
-    icon=pygame.image.load("Flappy bird/assets/yellowbird-upflap.png")
+    icon=pygame.image.load("Flappy_bird/assets/yellowbird-upflap.png")
 
-    background=pygame.image.load("Flappy bird/assets/background-night.png")
+    background=pygame.image.load("Flappy_bird/assets/background-night.png")
     background=pygame.transform.scale2x(background)
     
-    floor=pygame.image.load("Flappy bird/assets/floor.png")
+    floor=pygame.image.load("Flappy_bird/assets/floor.png")
     floor=pygame.transform.scale2x(floor)
     return icon,background,floor
 
