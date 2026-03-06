@@ -87,7 +87,6 @@ class Floor:
 
 
 class Pipe:
-
     def __init__(self,image,bird):
         self.image=image
         self.image_flipped=pygame.transform.flip(image,False,True)
@@ -191,7 +190,6 @@ class Game:
 
         self.game_over()
         pygame.display.update()
-        # pygame.quit()
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -227,13 +225,13 @@ class Game:
         if self.bird.rect.top<=-75: 
             self.running=False
             self.sound.hit_sound.play()
-            pygame.time.delay(500)
+            pygame.time.delay(300)
             self.sound.die_sound.play()
 
         if self.bird.rect.colliderect(self.floor.rect):
             self.running=False
             self.sound.hit_sound.play()
-            pygame.time.delay(500)
+            pygame.time.delay(300)
             self.sound.die_sound.play()
 
         for pipe in self.pipes:
@@ -241,7 +239,7 @@ class Game:
             self.bird.rect.colliderect(pipe.bottom_rect):
                 self.running = False
                 self.sound.hit_sound.play()
-                pygame.time.delay(500)
+                pygame.time.delay(300)
                 self.sound.die_sound.play()
 
     def draw(self):
@@ -249,9 +247,11 @@ class Game:
         for pipe in self.pipes:
             pipe.draw(self.screen)
         self.floor.draw(self.screen)
+
         if self.running:
             self.bird.draw(self.screen)
         self.score.draw(self.screen)
+
         pygame.display.update()
 
     def restart(self):
@@ -275,6 +275,7 @@ class Game:
                 if event.type==pygame.QUIT:
                     game_over=False
                     exit()
+                    
                 if event.type==pygame.MOUSEBUTTONDOWN:
                         self.running=True
                         self.restart()
