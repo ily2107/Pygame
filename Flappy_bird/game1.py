@@ -116,6 +116,8 @@ class Pipe:
         center_y=max(center_y,100)
 
         top_height=center_y-self.GAP//2
+        if top_height<=0: top_height=-75
+
         bottom_y=center_y+self.GAP//2     
 
         self.top_rect=self.image_flipped.get_rect(
@@ -182,8 +184,7 @@ class Game:
 
         icon, self.background, floor_img = load_assets()
         pygame.display.set_icon(icon)
-        self.pipe_image = pygame.image.load("Flappy_bird/assets/pipe-green.png")
-        self.pipe_image = pygame.transform.scale2x(self.pipe_image)
+        self.pipe_image = pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/pipe-green.png"))
 
         self.pipes = []
         self.spawn_time = 0
@@ -311,11 +312,9 @@ class Game:
 def load_assets():
     icon=pygame.image.load("Flappy_bird/assets/yellowbird-upflap.png")
 
-    background=pygame.image.load("Flappy_bird/assets/background-night.png")
-    background=pygame.transform.scale2x(background)
-    
-    floor=pygame.image.load("Flappy_bird/assets/floor.png")
-    floor=pygame.transform.scale2x(floor)
+    background=pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/background-night.png"))
+    floor=pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/floor.png"))
+
     return icon,background,floor
 
 
