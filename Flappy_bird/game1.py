@@ -46,24 +46,35 @@ P=0.2
 # ==================================================
 class Bird:
     def __init__(self):
-        self.fall_image=pygame.image.load("Flappy_bird/assets/yellowbird-upflap.png")
-        self.fall_image=pygame.transform.scale2x(self.fall_image)
-        self.rect=self.fall_image.get_rect(center=(100,300))       
-        self.tap_image=pygame.image.load("Flappy_bird/assets/yellowbird-downflap.png")
-        self.tap_image=pygame.transform.scale2x(self.tap_image)
-        self.swap=False
+        self.frames=[
+            pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/yellowbird-upflap.png")),
+            pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/yellowbird-downflap.png")),
+
+        ]
+        self.frame_index=0
+        self.image=self.frames[self.frame_index]
+
+        self.rect=self.image.get_rect(center=(100,300))       
+
         self.velocity=0
+        self.animation_time=0
 
     def update(self):
         self.velocity+=P
         self.rect.y+=self.velocity
-        if self.velocity>0: self.swap=False
+        self.animation_time+=1
+
+        if self.animation_time>8:
+            self.frame_index+=1
+            if self.frame_index>=len(self.frames):
+                self.frame_index=0
+            self.image=self.frames[self.frame_index]
+            self.animation_time=0
     
     def draw(self,screen):
-        if self.swap:
-            screen.blit(self.tap_image,self.rect)
-        else: 
-            screen.blit(self.fall_image,self.rect)
+        rotated=pygame.transform.rotate(self.image,-self.velocity*3)
+        rect=rotated.get_rect(center=self.rect.center)
+        screen.blit(rotated,rect)
 
 
 class Floor:
