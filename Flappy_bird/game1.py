@@ -98,15 +98,19 @@ class Floor:
 
 
 class Pipe:
-    def __init__(self,image,bird):
+    def __init__(self,image,bird,delay_time):
         self.image=image
         self.image_flipped=pygame.transform.flip(image,False,True)
 
         self.x=WIDTH
         self.speed=SCROLL_SPEED
-        self.GAP=random.randint(150,240)
+        if delay_time<=230: 
+            self.GAP=random.randint(200,220)
+            offset=random.randint(-100,100)
+        else: 
+            self.GAP=random.randint(180,200)
+            offset=random.randint(100,250)*random.choice([-1,1])
 
-        offset=random.randint(-100,100)
         center_y=bird.rect.centery+offset
         center_y=min(center_y,400)
         center_y=max(center_y,100)
@@ -183,6 +187,7 @@ class Game:
 
         self.pipes = []
         self.spawn_time = 0
+        self.delay=random.randint(180,280)
 
         self.bird = Bird()
         self.floor = Floor(floor_img, FLOOR_Y)
@@ -218,10 +223,10 @@ class Game:
         self.bird.update()
         self.spawn_time += 1
 
-        self.delay=random.randint(180,480)
         if self.spawn_time>self.delay:
-            self.pipes.append(Pipe(self.pipe_image,self.bird))
+            self.pipes.append(Pipe(self.pipe_image,self.bird,self.delay))
             self.spawn_time=0
+            self.delay=random.randint(180,280)
 
         for pipe in self.pipes:
             if not pipe.passed and pipe.top_rect.right<self.bird.rect.left:
