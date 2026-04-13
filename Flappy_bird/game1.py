@@ -48,8 +48,8 @@ class Bird:
     def __init__(self):
         self.frames=[
             pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/yellowbird-upflap.png")),
+            pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/yellowbird-midflap.png")),
             pygame.transform.scale2x(pygame.image.load("Flappy_bird/assets/yellowbird-downflap.png")),
-
         ]
         self.frame_index=0
         self.image=self.frames[self.frame_index]
