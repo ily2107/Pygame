@@ -49,7 +49,7 @@ class Game:
             keys = pygame.key.get_pressed()
             self.player.handle_input(keys, self.level.maze)
             self.player.update()
-            if time.time() - self.last_move > 0.2:
+            if time.time() - self.last_move > 0.1:
                 self.enemy.update(self.player, self.level.maze)
                 self.last_move = time.time()
 

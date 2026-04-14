@@ -29,15 +29,13 @@ def gen_lv1():
                             if maze[tx][ty] == 0:
                                 cnt += 1
 
-                    # 🔥 CHỈ THÊM PHẦN NÀY (KHÔNG ĐỤNG CẤU TRÚC)
-                    if cnt <= 1 or random.random() < 0.03:
+                    if cnt <= 1 or random.random() < 0.05:
                         dfs(nx, ny)
 
     dfs(0, 1)
     dfs(1, 0)
 
     return maze
-
 
 maze = gen_lv1()
 
