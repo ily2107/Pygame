@@ -1,8 +1,12 @@
+import time
 import pygame
 import random
+import importlib
 from setting import *
 from ui.menu import Menu
 from core.maze import Maze
+from entities.player import Player
+from entities.enemy import Enemy
 from systems.renderer import Renderer
 
 class Game:
@@ -12,17 +16,17 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.menu = Menu(self)
+        self.level_cnt = 1
+        self.last_move = 0
 
-        self.map_type = random.randint(1,3)
-        if self.map_type == 1:
-            self.maze = Maze.load_from_txt("maps/level1/map1.txt")
-        elif self.map_type == 2:
-            self.maze = Maze.load_from_txt("maps/level1/map2.txt")
-        else: 
-            self.maze = Maze.load_from_txt("maps/level1/map3.txt")
-            
+        self.level = importlib.import_module(f"levels.level{self.level_cnt}")
+        self.player = Player(*self.level.player_spawn)
+        self.enemy = Enemy(self.level.x, self.level.y)
+
+        self.game_over = False
+
         self.renderer = Renderer(self.screen)
-        self.renderer.draw_maze(self.maze, self.map_type)
+        self.renderer.draw_maze(self.level.maze, self.level.type)
     
     def run(self):
         while True:
@@ -37,9 +41,35 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-            
+
+            if self.game_over:
+                self.show_game_over()
+                continue
+
+            keys = pygame.key.get_pressed()
+            self.player.handle_input(keys, self.level.maze)
+            self.player.update()
+            if time.time() - self.last_move > 0.2:
+                self.enemy.update(self.player, self.level.maze)
+                self.last_move = time.time()
+
+            if self.enemy.grid_x == self.player.grid_x and self.enemy.grid_y == self.player.grid_y:
+                self.game_over = True
+
             self.screen.blit(self.renderer.maze_surface, (0, 0))
+            self.renderer.draw_player(self.screen, self.player)
+            self.renderer.draw_enemy(self.screen, self.enemy)
 
             pygame.display.flip()
             self.clock.tick(FPS)
-        
+    
+    def show_game_over(self):
+        self.screen.fill((0, 0, 0))
+
+        font = pygame.font.SysFont("Arial", 80)
+        text = font.render("GAME OVER", True, (255, 0, 0))
+
+        self.screen.blit(text, (WIDTH//2 - text.get_width()//2,
+                                HEIGHT//2 - text.get_height()//2))
+
+        pygame.display.flip()

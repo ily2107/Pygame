@@ -7,6 +7,33 @@ class Renderer:
         self.screen=screen
         self.maze_surface = None
 
+        wall_image2_1 = pygame.image.load("assets/Screenshot 2026-04-14 163254.png").convert()
+        wall_image2_2 = pygame.image.load("assets/Screenshot 2026-04-14 163322.png").convert()
+        wall_image2_3 = pygame.image.load("assets/Screenshot 2026-04-14 163555.png").convert()
+        wall_image2_4 = pygame.image.load("assets/Screenshot 2026-04-14 160239.png").convert()
+        
+        wall_image2_1 = pygame.transform.scale(wall_image2_1, (40, 40))
+        wall_image2_2 = pygame.transform.scale(wall_image2_2, (40, 40))
+        wall_image2_3 = pygame.transform.scale(wall_image2_3, (40, 40))
+        wall_image2_4 = pygame.transform.scale(wall_image2_4, (40, 40))
+
+        self.wall_images2 = [wall_image2_1, wall_image2_2, wall_image2_3, wall_image2_4]
+
+        self.path_image2 = pygame.image.load("assets/Screenshot 2026-04-14 162414.png").convert()
+        self.path_image2 = pygame.transform.scale(self.path_image2, (40, 40))
+
+        self.path_image3 = pygame.image.load("assets/0e5aa738-90d6-4d47-909c-75c6a6e88d50.png").convert()
+        self.path_image3.set_colorkey((0, 0, 0))
+        self.path_image3 = pygame.transform.scale(self.path_image3, (42, 42))
+
+        self.player_image = pygame.image.load("assets/nobita4 (1)-Picsart-AiImageEnhancer.png").convert()
+        self.player_image.set_colorkey((0, 0, 0))
+        self.player_image = pygame.transform.scale(self.player_image, (40, 40))
+
+        self.enemy_image = pygame.image.load("assets/anh-chaien-dang-tuc-gian-1747363266910-17473632669.png").convert()
+        self.enemy_image.set_colorkey((0, 0, 0))
+        self.enemy_image = pygame.transform.scale(self.enemy_image, (40, 40))
+
     def draw_wall_block1(self, surface, x, y):
         colors = {
             "1": (10, 45, 18),    # nền xanh rất đậm
@@ -43,113 +70,52 @@ class Renderer:
                 c = pattern[row][col]
                 pygame.draw.rect(surface, colors[c], (x + 2 * col, y + 2 * row, 2, 2))
 
-    def draw_wall_block2_1(self, surface, x, y):
-        pygame.draw.rect(surface, (98, 150, 58), (x, y, 40, 40))
+    def draw_wall_block2(self, surface, x, y, type):
+        surface.blit(self.wall_images2[type], (x, y))
 
-        outline = (6, 72, 30)
-        leaf_dark = (20, 168, 52)
-        leaf_mid = (28, 196, 58)
-        leaf_light = (64, 230, 82)
+    def draw_wall_block3(self, surface, x, y):
+        colors = {
+            "1": (32, 110, 140),
+            "2": (64, 158, 180),
+            "3": (46, 134, 160),
+            "4": (56, 146, 170),
+            "5": (76, 172, 192),
+            "6": (88, 184, 202),
+        }
 
-        trunk_dark = (90, 52, 28)
-        trunk_mid = (122, 74, 42)
-        trunk_light = (150, 96, 58)
+        pattern = [
+            "12222322222232222221",
+            "22333433322334333432",
+            "23344344433443444332",
+            "33432233344333223433",
+            "24333344433344433342",
+            "33444333344333344433",
+            "22333222333222333322",
+            "23344433444334444332",
+            "33433322333223333433",
+            "24334443344433443342",
+            "33422333223332223343",
+            "22333444334443433322",
+            "23344333322333344432",
+            "33433344433444333343",
+            "24332233322333223342",
+            "33444433444334444433",
+            "22333322333223333322",
+            "23344443344433444332",
+            "22333433343334333432",
+            "12222322232222322321",
+        ]
 
-        pygame.draw.circle(surface, outline, (x + 13, y + 12), 8)
-        pygame.draw.circle(surface, outline, (x + 27, y + 12), 8)
-        pygame.draw.circle(surface, outline, (x + 20, y + 9), 10)
+        pixel_size = 2
 
-        pygame.draw.circle(surface, leaf_mid, (x + 13, y + 12), 7)
-        pygame.draw.circle(surface, leaf_mid, (x + 27, y + 12), 7)
-        pygame.draw.circle(surface, leaf_mid, (x + 20, y + 9), 9)
-
-        pygame.draw.circle(surface, leaf_light, (x + 15, y + 9), 4)
-        pygame.draw.circle(surface, leaf_light, (x + 25, y + 10), 4)
-
-        pygame.draw.circle(surface, outline, (x + 10, y + 20), 7)
-        pygame.draw.circle(surface, outline, (x + 20, y + 20), 9)
-        pygame.draw.circle(surface, outline, (x + 30, y + 20), 7)
-
-        pygame.draw.circle(surface, leaf_dark, (x + 10, y + 20), 6)
-        pygame.draw.circle(surface, leaf_dark, (x + 20, y + 20), 8)
-        pygame.draw.circle(surface, leaf_dark, (x + 30, y + 20), 6)
-
-        for px in [6, 11, 16, 21, 26, 31]:
-            pygame.draw.circle(surface, outline, (x + px, y + 25), 3)
-        for px in [7, 12, 17, 22, 27, 32]:
-            pygame.draw.circle(surface, leaf_dark, (x + px, y + 24), 2)
-
-        pygame.draw.ellipse(surface, leaf_light, (x + 7, y + 15, 10, 6))
-        pygame.draw.ellipse(surface, leaf_light, (x + 17, y + 14, 12, 7))
-        pygame.draw.ellipse(surface, leaf_mid,   (x + 24, y + 16, 8, 5))
-
-        pygame.draw.ellipse(surface, (16, 140, 46), (x + 7,  y + 20, 9, 5))
-        pygame.draw.ellipse(surface, (16, 140, 46), (x + 18, y + 19, 10, 5))
-        pygame.draw.ellipse(surface, (16, 140, 46), (x + 26, y + 21, 7, 4))
-
-        pygame.draw.rect(surface, trunk_dark, (x + 16, y + 22, 8, 12), border_radius=2)
-        pygame.draw.rect(surface, trunk_mid,  (x + 17, y + 22, 6, 12), border_radius=2)
-        pygame.draw.rect(surface, trunk_light,(x + 19, y + 22, 2, 12), border_radius=1)
-
-        pygame.draw.polygon(surface, trunk_dark, [(x + 16, y + 24), (x + 12, y + 22), (x + 13, y + 21), (x + 17, y + 23)])
-        pygame.draw.polygon(surface, trunk_dark, [(x + 24, y + 24), (x + 28, y + 22), (x + 27, y + 21), (x + 23, y + 23)])
-
-        pygame.draw.polygon(surface, trunk_dark, [(x + 16, y + 34), (x + 11, y + 38), (x + 14, y + 38), (x + 18, y + 35)])
-        pygame.draw.polygon(surface, trunk_dark, [(x + 24, y + 34), (x + 29, y + 38), (x + 26, y + 38), (x + 22, y + 35)])
-        pygame.draw.polygon(surface, trunk_mid,  [(x + 18, y + 34), (x + 20, y + 39), (x + 22, y + 34)])
-
-        pygame.draw.circle(surface, outline, (x + 26, y + 29), 3)
-        pygame.draw.circle(surface, leaf_dark, (x + 26, y + 29), 2)
-
-    def draw_wall_block2_2(self, surface, x, y):
-        pygame.draw.rect(surface, (98, 150, 58), (x, y, 40, 40))
-
-        outline    = (8, 70, 24)
-        leaf_dark  = (92, 192, 18)
-        leaf_mid   = (108, 212, 20)
-        leaf_light = (132, 228, 32)
-
-        pygame.draw.circle(surface, outline, (x + 14, y + 15), 12)
-        pygame.draw.circle(surface, outline, (x + 26, y + 15), 11)
-        pygame.draw.circle(surface, outline, (x + 31, y + 16), 8)
-
-        pygame.draw.circle(surface, leaf_mid,   (x + 14, y + 15), 10)
-        pygame.draw.circle(surface, leaf_mid,   (x + 26, y + 15), 9)
-        pygame.draw.circle(surface, leaf_mid,   (x + 31, y + 16), 6)
-
-        pygame.draw.ellipse(surface, leaf_light, (x + 8,  y + 7, 12, 7))
-        pygame.draw.ellipse(surface, leaf_light, (x + 21, y + 8, 10, 6))
-
-        pygame.draw.circle(surface, outline, (x + 12, y + 24), 8)
-        pygame.draw.circle(surface, leaf_dark, (x + 12, y + 24), 6)
-
-        pygame.draw.circle(surface, outline, (x + 28, y + 24), 10)
-        pygame.draw.circle(surface, leaf_dark, (x + 28, y + 24), 8)
-
-        for cx, cy, r in [
-            (x + 6,  y + 29, 3),
-            (x + 10, y + 30, 3),
-            (x + 14, y + 29, 3),
-            (x + 24, y + 31, 3),
-            (x + 28, y + 32, 3),
-            (x + 32, y + 31, 3),
-            (x + 36, y + 30, 3),
-        ]:
-            pygame.draw.circle(surface, outline, (cx, cy), r)
-            pygame.draw.circle(surface, leaf_dark, (cx, cy - 1), max(1, r - 1))
-
-        pygame.draw.ellipse(surface, outline,    (x + 4,  y + 18, 13, 12))
-        pygame.draw.ellipse(surface, leaf_dark,  (x + 5,  y + 19, 11, 10))
-
-        pygame.draw.ellipse(surface, outline,    (x + 18, y + 17, 17, 14))
-        pygame.draw.ellipse(surface, leaf_dark,  (x + 19, y + 18, 15, 12))
-
-        pygame.draw.ellipse(surface, outline,    (x + 25, y + 17, 11, 11))
-        pygame.draw.ellipse(surface, leaf_dark,  (x + 26, y + 18, 9,  9))
-
-        pygame.draw.ellipse(surface, leaf_mid,   (x + 6,  y + 19, 8, 5))
-        pygame.draw.ellipse(surface, leaf_mid,   (x + 22, y + 18, 10, 6))
-        pygame.draw.ellipse(surface, leaf_light, (x + 24, y + 20, 6, 4))
+        for row in range(20):
+            for col in range(20):
+                c = pattern[row][col]
+                pygame.draw.rect(
+                    surface,
+                    colors[c],
+                    (x + col * pixel_size, y + row * pixel_size, pixel_size, pixel_size)
+                )
 
     def draw_path_block1(self, surface, x, y):
         colors = {
@@ -188,73 +154,41 @@ class Renderer:
                 pygame.draw.rect(surface, colors[c], (x + 2 * col, y + 2 * row, 2, 2))
 
     def draw_path_block2(self, surface, x, y):
-        colors = {
-            "1": (98, 150, 58),   # màu chủ đạo
-            "2": (118, 170, 76),  # sáng hơn
-            "3": (74, 124, 42),   # đậm hơn
-            "4": (56, 94, 30),    # rất đậm
-        }
-
-        pattern = [
-            "11111111111111111111",
-            "11211111111111112111",
-            "11111131111111111111",
-            "11121111111113111111",
-            "11111111121111111111",
-            "11311111111111111121",
-            "11111112111111131111",
-            "11111111111111111111",
-            "11113111111121111111",
-            "11111111111111111111",
-            "11111111131111111111",
-            "11211111111111112111",
-            "11111111111111111111",
-            "11111112111111131111",
-            "11111111111111111111",
-            "11311111111111111121",
-            "11111111121111111111",
-            "11121111111113111111",
-            "11111131111111111111",
-            "11111111111111111111",
-        ]
-
-        pixel_size = 2   # 20x20 -> 40x40
-
-        for row in range(20):
-            for col in range(20):
-                c = pattern[row][col]
-                pygame.draw.rect(
-                    surface,
-                    colors[c],
-                    (x + col * pixel_size, y + row * pixel_size, pixel_size, pixel_size)
-                )
+        pygame.draw.rect(surface, (148, 218, 0), (x, y, 40, 40))
+        surface.blit(self.path_image2, (x, y))
+    
+    def draw_path_block3(self, surface, x, y):
+        pygame.draw.rect(surface, (64, 158, 180), (x, y, 40, 40))
+        surface.blit(self.path_image3, (x, y))
 
     def draw_maze(self, maze, type):
         self.maze_surface = pygame.Surface((maze.cols * 40, maze.rows * 40))
         arr = [[0 for _ in range(maze.cols)] for _ in range(maze.rows)]
         for x in range(maze.rows):
             for y in range(maze.cols):
-                arr[x][y] = random.randint(1,2)
+                arr[x][y] = random.randint(0,3)
 
         for x in range(maze.rows):
             for y in range(maze.cols):
                 cell=maze.grid[x][y]
                 if type == 1:
                     if cell.type=="Wall": 
-                        self.draw_wall_block1(self.maze_surface, y*40, x*40)
+                        self.draw_wall_block1(self.maze_surface, y * 40, x * 40)
                     else: 
-                        self.draw_path_block1(self.maze_surface, y*40, x*40)
+                        self.draw_path_block1(self.maze_surface, y * 40, x * 40)
                 elif type == 2:
                     if cell.type=="Wall": 
-                        if arr[x][y] == 1: self.draw_wall_block2_1(self.maze_surface, y*40, x*40)
-                        else: self.draw_wall_block2_2(self.maze_surface, y*40, x*40)
+                        self.draw_wall_block2(self.maze_surface, y * 40, x * 40, arr[x][y])
                     else: 
-                        self.draw_path_block2(self.maze_surface, y*40, x*40)
+                        self.draw_path_block2(self.maze_surface, y * 40, x * 40)
                 else:
                     if cell.type=="Wall": 
-                        if arr[x][y] == 1: self.draw_wall_block2_1(self.maze_surface, y*40, x*40)
-                        else: self.draw_wall_block2_2(self.maze_surface, y*40, x*40)
+                        self.draw_wall_block3(self.maze_surface, y * 40, x * 40)
                     else: 
-                        self.draw_path_block2(self.maze_surface, y*40, x*40)
+                        self.draw_path_block3(self.maze_surface, y * 40, x * 40)
                 
-                
+    def draw_player(self, surface, player):
+        surface.blit(self.player_image, (player.px, player.py))
+
+    def draw_enemy(self, surface, enemy):
+        surface.blit(self.enemy_image, (enemy.px, enemy.py))

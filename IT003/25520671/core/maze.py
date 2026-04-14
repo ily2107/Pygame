@@ -18,6 +18,11 @@ class Maze:
                     self.grid[i][j].type = "Path"
                 else: self.grid[i][j].type = "Wall"
 
+    def is_walkable(self, x, y):
+        if x < 0 or y < 0 or x >= self.cols or y >= self.rows:
+            return False
+        return self.grid[y][x].type == "Path"
+    
     @classmethod
     def load_from_txt(cls, path):
         grid = []
