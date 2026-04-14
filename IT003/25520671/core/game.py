@@ -24,6 +24,7 @@ class Game:
         self.enemy = Enemy(self.level.x, self.level.y)
 
         self.game_over = False
+        self.game_victory = False
 
         self.renderer = Renderer(self.screen)
         self.renderer.draw_maze(self.level.maze, self.level.type)
@@ -46,15 +47,23 @@ class Game:
                 self.show_game_over()
                 continue
 
+            if self.game_victory:
+                self.show_game_victory()
+                continue
+
             keys = pygame.key.get_pressed()
             self.player.handle_input(keys, self.level.maze)
             self.player.update()
-            if time.time() - self.last_move > 0.1:
+
+            if time.time() - self.last_move > 0.3:
                 self.enemy.update(self.player, self.level.maze)
                 self.last_move = time.time()
 
             if self.enemy.grid_x == self.player.grid_x and self.enemy.grid_y == self.player.grid_y:
                 self.game_over = True
+
+            if self.player.grid_x == self.level.goal_x and self.player.grid_y == self.level.goal_y:
+                self.game_victory = True
 
             self.screen.blit(self.renderer.maze_surface, (0, 0))
             self.renderer.draw_player(self.screen, self.player)
@@ -71,5 +80,16 @@ class Game:
 
         self.screen.blit(text, (WIDTH//2 - text.get_width()//2,
                                 HEIGHT//2 - text.get_height()//2))
+
+        pygame.display.flip()
+    
+    def show_game_victory(self):
+        self.screen.fill((0, 0, 0))
+
+        font = pygame.font.SysFont("Arial", 80)
+        text = font.render("VICTORY!", True, (0, 255, 0))
+
+        self.screen.blit(text, (WIDTH // 2 - text.get_width() // 2,
+                                HEIGHT // 2 - text.get_height() // 2))
 
         pygame.display.flip()
