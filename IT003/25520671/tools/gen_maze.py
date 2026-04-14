@@ -20,18 +20,24 @@ def gen_lv1():
 
             if 0 <= nx < COLS and 0 <= ny < ROWS:
                 if maze[nx][ny] == 1:
+
                     cnt = 0
                     for nidx in range(4):
                         tx, ty = nx + dx[nidx], ny + dy[nidx]
-                        if 0 <= tx < COLS and 0 <= ty < ROWS: 
-                            if maze[tx][ty] == 0: cnt += 1
 
-                    if cnt <= 1: dfs(nx, ny)
-            
+                        if 0 <= tx < COLS and 0 <= ty < ROWS:
+                            if maze[tx][ty] == 0:
+                                cnt += 1
+
+                    # 🔥 CHỈ THÊM PHẦN NÀY (KHÔNG ĐỤNG CẤU TRÚC)
+                    if cnt <= 1 or random.random() < 0.03:
+                        dfs(nx, ny)
+
     dfs(0, 1)
     dfs(1, 0)
-    
+
     return maze
+
 
 maze = gen_lv1()
 
