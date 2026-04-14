@@ -14,6 +14,5 @@ for i in range (maze.rows):
                 x, y = i, j
 
 enemy_spawn = (x, y)
-print(x, y)
 
-goal_x, goal_y = maze.rows - 1, maze.cols - 1
+goal_x, goal_y = maze.cols - 1, maze.rows - 1

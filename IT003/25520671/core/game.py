@@ -55,9 +55,9 @@ class Game:
             self.player.handle_input(keys, self.level.maze)
             self.player.update()
 
-            if time.time() - self.last_move > 0.3:
-                self.enemy.update(self.player, self.level.maze)
-                self.last_move = time.time()
+            # if time.time() - self.last_move > 0.3:
+            #     self.enemy.update(self.player, self.level.maze)
+            #     self.last_move = time.time()
 
             if self.enemy.grid_x == self.player.grid_x and self.enemy.grid_y == self.player.grid_y:
                 self.game_over = True
