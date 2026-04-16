@@ -1,0 +1,24 @@
+[33m9bf5173[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: commit (merge): update
+[33m09d3054[m HEAD@{1}: commit: update
+[33mfa8de4b[m HEAD@{2}: commit: update
+[33m951e38c[m HEAD@{3}: commit: update
+[33m238af1d[m HEAD@{4}: commit: update
+[33m0e2e7a9[m HEAD@{5}: commit: update
+[33mca81276[m HEAD@{6}: commit: update
+[33mc95abc0[m HEAD@{7}: commit: update
+[33mb622d35[m HEAD@{8}: commit: update
+[33m9df2554[m HEAD@{9}: commit: update
+[33m8b94647[m HEAD@{10}: commit: fix gitignore
+[33me90afa1[m HEAD@{11}: commit: remove vscode and venv from repo
+[33m5a60bf7[m HEAD@{12}: commit: fix repo structure
+[33mffcb0e3[m HEAD@{13}: commit: remove vscode and venv from repo
+[33mc8156e6[m HEAD@{14}: commit: update
+[33me8ad5e6[m HEAD@{15}: commit: remove vscode and venv from repo
+[33mcd91d21[m HEAD@{16}: pull origin main --rebase (finish): returning to refs/heads/main
+[33mcd91d21[m HEAD@{17}: pull origin main --rebase (pick): update
+[33me495bee[m HEAD@{18}: pull origin main --rebase (start): checkout e495bee896e89b0c7b23ee4e29ca02767b98990b
+[33m18ae6b5[m HEAD@{19}: commit: update
+[33m1cfff1d[m HEAD@{20}: commit: remove vscode and venv from repo
+[33m0f72f7f[m HEAD@{21}: commit: add gitinore
+[33m100da74[m HEAD@{22}: Branch: renamed refs/heads/main to refs/heads/main
+[33m100da74[m HEAD@{24}: commit (initial): first commit

@@ -7,10 +7,30 @@ class Renderer:
         self.screen=screen
         self.maze_surface = None
 
-        wall_image2_1 = pygame.image.load("assets/Screenshot 2026-04-14 163254.png").convert()
-        wall_image2_2 = pygame.image.load("assets/Screenshot 2026-04-14 163322.png").convert()
-        wall_image2_3 = pygame.image.load("assets/Screenshot 2026-04-14 163555.png").convert()
-        wall_image2_4 = pygame.image.load("assets/Screenshot 2026-04-14 160239.png").convert()
+        self.exit_close_image = pygame.image.load("assets/ChatGPT Image Apr 16, 2026, 03_53_08 PM.png").convert_alpha()
+        self.exit_close_image.set_colorkey((0, 0, 0))
+        self.exit_close_image = pygame.transform.scale(self.exit_close_image, (40, 50))
+
+        self.exit_open_image = pygame.image.load("assets/ChatGPT Image Apr 16, 2026, 03_06_34 PM.png").convert_alpha()
+        self.exit_open_image.set_colorkey((0, 0, 0))
+        self.exit_open_image = pygame.transform.scale(self.exit_open_image, (40, 50))
+
+        self.doraemon_image = pygame.image.load("assets/Doraemon_character.png").convert_alpha()
+        self.doraemon_image.set_colorkey((0, 0, 0))
+        self.doraemon_image = pygame.transform.scale(self.doraemon_image, (40, 40))
+
+        self.doraemon_eating_image = pygame.image.load("assets/1293-con-so-may-man-cua-doraemon-583174.png").convert_alpha()
+        self.doraemon_eating_image.set_colorkey((0, 0, 0))
+        self.doraemon_eating_image = pygame.transform.scale(self.doraemon_eating_image, (40, 40))
+
+        self.dorayaki_image = pygame.image.load("assets/ChatGPT Image Apr 16, 2026, 04_23_13 PM.png").convert_alpha()
+        self.dorayaki_image.set_colorkey((0, 0, 0))
+        self.dorayaki_image = pygame.transform.scale(self.dorayaki_image, (40, 40))
+
+        wall_image2_1 = pygame.image.load("assets/Screenshot 2026-04-14 163254.png").convert_alpha()
+        wall_image2_2 = pygame.image.load("assets/Screenshot 2026-04-14 163322.png").convert_alpha()
+        wall_image2_3 = pygame.image.load("assets/Screenshot 2026-04-14 163555.png").convert_alpha()
+        wall_image2_4 = pygame.image.load("assets/Screenshot 2026-04-14 160239.png").convert_alpha()
         
         wall_image2_1 = pygame.transform.scale(wall_image2_1, (40, 40))
         wall_image2_2 = pygame.transform.scale(wall_image2_2, (40, 40))
@@ -19,14 +39,14 @@ class Renderer:
 
         self.wall_images2 = [wall_image2_1, wall_image2_2, wall_image2_3, wall_image2_4]
 
-        self.path_image2 = pygame.image.load("assets/Screenshot 2026-04-14 162414.png").convert()
+        self.path_image2 = pygame.image.load("assets/Screenshot 2026-04-14 162414.png").convert_alpha()
         self.path_image2 = pygame.transform.scale(self.path_image2, (40, 40))
 
-        self.path_image3 = pygame.image.load("assets/0e5aa738-90d6-4d47-909c-75c6a6e88d50.png").convert()
+        self.path_image3 = pygame.image.load("assets/0e5aa738-90d6-4d47-909c-75c6a6e88d50.png").convert_alpha()
         self.path_image3.set_colorkey((0, 0, 0))
         self.path_image3 = pygame.transform.scale(self.path_image3, (42, 42))
 
-        self.player_image = pygame.image.load("assets/nobita4 (1)-Picsart-AiImageEnhancer.png").convert()
+        self.player_image = pygame.image.load("assets/nobita4 (1)-Picsart-AiImageEnhancer.png").convert_alpha()
         self.player_image.set_colorkey((0, 0, 0))
         self.player_image = pygame.transform.scale(self.player_image, (40, 40))
 
@@ -36,10 +56,10 @@ class Renderer:
 
     def draw_wall_block1(self, surface, x, y):
         colors = {
-            "1": (10, 45, 18),    # nền xanh rất đậm
-            "2": (18, 78, 30),    # xanh đậm
-            "3": (28, 120, 45),   # xanh lá
-            "4": (55, 170, 70),   # xanh sáng
+            "1": (10, 45, 18), 
+            "2": (18, 78, 30),    
+            "3": (28, 120, 45),  
+            "4": (55, 170, 70),  
         }
 
         pattern = [
@@ -161,16 +181,16 @@ class Renderer:
         pygame.draw.rect(surface, (64, 158, 180), (x, y, 40, 40))
         surface.blit(self.path_image3, (x, y))
 
-    def draw_maze(self, maze, type):
-        self.maze_surface = pygame.Surface((maze.cols * 40, maze.rows * 40))
-        arr = [[0 for _ in range(maze.cols)] for _ in range(maze.rows)]
-        for x in range(maze.rows):
-            for y in range(maze.cols):
+    def draw_maze(self, level, type):
+        self.maze_surface = pygame.Surface((level.maze.cols * 40, level.maze.rows * 40))
+        arr = [[0 for _ in range(level.maze.cols)] for _ in range(level.maze.rows)]
+        for x in range(level.maze.rows):
+            for y in range(level.maze.cols):
                 arr[x][y] = random.randint(0,3)
 
-        for x in range(maze.rows):
-            for y in range(maze.cols):
-                cell=maze.grid[x][y]
+        for x in range(level.maze.rows):
+            for y in range(level.maze.cols):
+                cell=level.maze.grid[x][y]
                 if type == 1:
                     if cell.type=="Wall": 
                         self.draw_wall_block1(self.maze_surface, y * 40, x * 40)
@@ -186,6 +206,9 @@ class Renderer:
                         self.draw_wall_block3(self.maze_surface, y * 40, x * 40)
                     else: 
                         self.draw_path_block3(self.maze_surface, y * 40, x * 40)
+        
+        self.maze_surface.blit(self.exit_close_image, (level.goal_x * 40, level.goal_y * 40))
+        self.maze_surface.blit(self.doraemon_image, (level.doraemon[1] * 40, level.doraemon[0] * 40))
                 
     def draw_player(self, surface, player):
         surface.blit(self.player_image, (player.px, player.py))
