@@ -181,16 +181,16 @@ class Renderer:
         pygame.draw.rect(surface, (64, 158, 180), (x, y, 40, 40))
         surface.blit(self.path_image3, (x, y))
 
-    def draw_maze(self, level, type):
-        self.maze_surface = pygame.Surface((level.maze.cols * 40, level.maze.rows * 40))
-        arr = [[0 for _ in range(level.maze.cols)] for _ in range(level.maze.rows)]
-        for x in range(level.maze.rows):
-            for y in range(level.maze.cols):
+    def draw_maze(self, game, type):
+        self.maze_surface = pygame.Surface((game.level.maze.cols * 40, game.level.maze.rows * 40))
+        arr = [[0 for _ in range(game.level.maze.cols)] for _ in range(game.level.maze.rows)]
+        for x in range(game.level.maze.rows):
+            for y in range(game.level.maze.cols):
                 arr[x][y] = random.randint(0,3)
 
-        for x in range(level.maze.rows):
-            for y in range(level.maze.cols):
-                cell=level.maze.grid[x][y]
+        for x in range(game.level.maze.rows):
+            for y in range(game.level.maze.cols):
+                cell=game.level.maze.grid[x][y]
                 if type == 1:
                     if cell.type=="Wall": 
                         self.draw_wall_block1(self.maze_surface, y * 40, x * 40)
@@ -207,8 +207,8 @@ class Renderer:
                     else: 
                         self.draw_path_block3(self.maze_surface, y * 40, x * 40)
         
-        self.maze_surface.blit(self.exit_close_image, (level.goal_x * 40, level.goal_y * 40))
-        self.maze_surface.blit(self.doraemon_image, (level.doraemon[1] * 40, level.doraemon[0] * 40))
+        self.maze_surface.blit(self.exit_close_image, (game.level.goal_x * 40, game.level.goal_y * 40))
+        self.maze_surface.blit(self.doraemon_image, (game.doraemon[1] * 40, game.doraemon[0] * 40))
                 
     def draw_player(self, surface, player):
         surface.blit(self.player_image, (player.px, player.py))

@@ -24,12 +24,13 @@ class Game:
         self.level = importlib.import_module(f"levels.level{self.level_cnt}")
         self.player = Player(*self.level.player_spawn)
         self.enemy = Enemy(*self.level.enemy_spawn)
+        self.randomize_dorayaki()
 
         self.game_over = False
         self.game_victory = False
 
         self.renderer = Renderer(self.screen)
-        self.renderer.draw_maze(self.level, self.level.type)
+        self.renderer.draw_maze(self, self.level.type)
 
         self.tutorial = TutorialOverlay(self.screen)
         
@@ -48,6 +49,21 @@ class Game:
         while True:
             self.tutorial.show(self.level_cnt,self.renderer)
             self.run_game()
+
+    def randomize_dorayaki(self):
+        walkable = []
+
+        for i in range(self.level.maze.rows):
+            for j in range(self.level.maze.cols):
+                if self.level.maze.is_walkable(i, j) and (i, j) != self.level.player_spawn and (j, i) != (self.level.goal_x, self.level.goal_y):
+                    walkable.append((j, i))
+
+        def far(cell):
+            return abs(cell[0] - self.level.maze.player_spawn[0]) + abs(cell[1] - self.level.maze.player_spawn[1])
+        far_cells = walkable[:len(walkable)]
+        positions = random.sample(far_cells, 4)
+        self.dorayaki = positions[:3]
+        self.doraemon = positions[3]
 
     def run_game(self):
         running = True
@@ -84,11 +100,11 @@ class Game:
                 self.game_victory = True
 
             px, py = self.player.grid_x, self.player.grid_y
-            for item in self.level.dorayaki[:]: 
+            for item in self.dorayaki[:]: 
                 if self.carry:
                     break
                 if item == (py, px):
-                    self.level.dorayaki.remove(item)
+                    self.dorayaki.remove(item)
                     self.carry = True
 
             if self.satisfy and self.change == False:
@@ -96,12 +112,12 @@ class Game:
                 self.renderer.maze_surface.blit(self.renderer.exit_open_image, (gx * 40, gy * 40))
                 self.change = True
 
-            if self.carry and self.player.grid_x == self.level.doraemon[1] and self.player.grid_y == self.level.doraemon[0]:
+            if self.carry and self.player.grid_x == self.doraemon[1] and self.player.grid_y == self.doraemon[0]:
                 self.points +=1
                 self.carry = False
 
             if self.points:
-                (gx, gy) = self.level.doraemon
+                (gx, gy) = self.doraemon
                 if self.level.type == 1:
                     self.renderer.draw_path_block1(self.renderer.maze_surface, gy * 40, gx * 40)
                 elif self.level.type == 2:
@@ -126,7 +142,7 @@ class Game:
             img = self.renderer.dorayaki_image.copy()
             img.set_alpha(self.alpha)
 
-            for x, y in self.level.dorayaki:
+            for x, y in self.dorayaki:
                 cx = y * 40 + 20
                 cy = x * 40 + 20
 

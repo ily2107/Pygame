@@ -19,20 +19,5 @@ def far(cell):
 
 walkable.sort(key = far, reverse = True)
 
-far_cells = walkable[:len(walkable)]
-
-positions = random.sample(far_cells, 4)
-
-dorayaki = positions[:3]
-doraemon = positions[3]
-
-while True:
-    enemy = walkable[:len(walkable)//4]
-    check = (enemy[0] == goal_x and enemy[1] == goal_y)
-    for i in range (4):
-        if enemy[0] == positions[i]:
-            check = True
-            break
-    enemy_spawn = enemy[0]
-    if check == False:
-        break
+enemy = walkable[:len(walkable)//4]
+enemy_spawn = enemy[0]
