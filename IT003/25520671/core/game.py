@@ -6,6 +6,7 @@ import importlib
 from setting import *
 from ui.menu import Menu
 from core.maze import Maze
+from ui.TutorialOverlay import TutorialOverlay
 from entities.player import Player
 from entities.enemy import Enemy
 from systems.renderer import Renderer
@@ -29,6 +30,8 @@ class Game:
 
         self.renderer = Renderer(self.screen)
         self.renderer.draw_maze(self.level, self.level.type)
+
+        self.tutorial = TutorialOverlay(self.screen)
         
         self.carry = False
         self.first_pick = False
@@ -41,8 +44,9 @@ class Game:
         self.sun_angle = 0
     
     def run(self):
+        self.menu.run()
         while True:
-            self.menu.run()
+            self.tutorial.show(self.level_cnt,self.renderer)
             self.run_game()
 
     def run_game(self):
@@ -61,6 +65,7 @@ class Game:
 
             if self.game_victory:
                 self.show_game_victory()
+                self.load_level()
                 return
 
             keys = pygame.key.get_pressed()
@@ -173,7 +178,10 @@ class Game:
             self.screen.blit(overlay,(0,0))
 
             self.screen.blit(text2, (WIDTH//2 - text2.get_width()//2, 50))
-            self.screen.blit(text3, (WIDTH//2 - text3.get_width()//2, HEIGHT - 100))
+            alpha = (math.sin(pygame.time.get_ticks() * 0.005) + 1) * 127
+            img = text3.copy()
+            img.set_alpha(alpha)
+            self.screen.blit(img, (WIDTH//2 - img.get_width()//2, HEIGHT - 100))
 
             pygame.display.update()
         pygame.quit()
@@ -207,7 +215,36 @@ class Game:
             self.screen.blit(overlay,(0,0))
 
             self.screen.blit(text2, (WIDTH//2 - text2.get_width()//2, 50))
-            self.screen.blit(text3, (WIDTH//2 - text3.get_width()//2, HEIGHT - 100))
+            alpha = (math.sin(pygame.time.get_ticks() * 0.005) + 1) * 127
+            img = text3.copy()
+            img.set_alpha(alpha)
+            self.screen.blit(img, (WIDTH//2 - img.get_width()//2, HEIGHT - 100))
 
             pygame.display.update()
         pygame.quit()
+    
+    def load_level(self):
+        self.level_cnt += 1
+        self.last_move = 0
+
+        self.level = importlib.import_module(f"levels.level{self.level_cnt}")
+        self.player = Player(*self.level.player_spawn)
+        self.enemy = Enemy(*self.level.enemy_spawn)
+
+        self.game_over = False
+        self.game_victory = False
+
+        self.renderer = Renderer(self.screen)
+        self.renderer.draw_maze(self.level, self.level.type)
+
+        self.tutorial = TutorialOverlay(self.screen)
+        
+        self.carry = False
+        self.first_pick = False
+        self.points = 0
+        self.satisfy = False
+        self.change = False
+
+        self.alpha = 255
+        self.alpha_dir = -5
+        self.sun_angle = 0
