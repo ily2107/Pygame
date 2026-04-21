@@ -142,12 +142,15 @@ class Menu:
                 self.selected = 0
 
         elif self.state == "main":
-            if self.selected == 0:  # New Game
+            if self.selected == 0:  
                 self.game.level_cnt = 1
                 self.running = False
 
-            elif self.selected == 1:  # Continue
-                self.game.level_cnt = self.game.user_data["level"]
+            elif self.selected == 1:  
+                if self.game.user_data:
+                    self.game.level_cnt = self.game.user_data["level"]
+                else:
+                    self.game.level_cnt = 1
                 self.running = False
 
     def draw(self):

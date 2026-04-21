@@ -1,5 +1,6 @@
 import time
 import math
+import auth
 import pygame
 import random
 import importlib
@@ -20,6 +21,9 @@ class Game:
         self.menu = Menu(self)
         self.level_cnt = 1
         self.last_move = 0
+        
+        self.current_user = None
+        self.user_data = None
 
         self.level = importlib.import_module(f"levels.level{self.level_cnt}")
         self.player = Player(*self.level.player_spawn)
@@ -79,6 +83,9 @@ class Game:
                         self.load_level()
 
             if self.game_over:
+                auth.update_user(self.game.current_user, {
+                    "level": self.level_cnt
+                })
                 self.show_game_over()
                 self.load_level()
                 return
@@ -86,6 +93,9 @@ class Game:
             if self.game_victory:
                 self.show_game_victory()
                 self.level_cnt += 1
+                auth.update_user(self.game.current_user, {
+                    "level": self.level_cnt
+                })
                 self.load_level()
                 return
 

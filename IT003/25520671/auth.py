@@ -42,3 +42,8 @@ def login(username, password):
         return False, "wrong_pass"
 
     return True, users[username]
+
+def update_user(username, data):
+    users = load_users()
+    users[username].update(data)
+    save_users(users)
