@@ -2,7 +2,9 @@ import random
 from core.maze import Maze
 
 type = random.randint(1,3)
-maze = Maze.load_from_txt(f"maps/level1/map{type}.txt")
+
+map = random.randint(1,3)
+maze = Maze.load_from_txt(f"maps/level1/map{map}.txt")
 
 player_spawn = (0, 0)
 goal_x, goal_y = maze.cols - 1, maze.rows - 1

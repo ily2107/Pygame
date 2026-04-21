@@ -55,32 +55,37 @@ class Game:
 
         for i in range(self.level.maze.rows):
             for j in range(self.level.maze.cols):
-                if self.level.maze.is_walkable(i, j) and (i, j) != self.level.player_spawn and (j, i) != (self.level.goal_x, self.level.goal_y):
+                if self.level.maze.is_walkable(i, j) and (i, j) != self.level.player_spawn and (j, i) != (self.level.goal_x, self.level.goal_y) and (i, j) != self.level.enemy_spawn:
                     walkable.append((j, i))
 
         def far(cell):
-            return abs(cell[0] - self.level.maze.player_spawn[0]) + abs(cell[1] - self.level.maze.player_spawn[1])
-        far_cells = walkable[:len(walkable)]
-        positions = random.sample(far_cells, 4)
+            return abs(cell[0] - self.level.player_spawn[0]) + abs(cell[1] - self.level.player_spawn[1])
+        
+        far_cells = sorted(walkable, key = far, reverse = True)
+        positions = random.sample(far_cells[:len(far_cells)//2], 4)
         self.dorayaki = positions[:3]
         self.doraemon = positions[3]
 
     def run_game(self):
         running = True
         while running:
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
                     
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.load_level()
+
             if self.game_over:
                 self.show_game_over()
-                self.__init__()
+                self.load_level()
                 return
 
             if self.game_victory:
                 self.show_game_victory()
+                self.level_cnt += 1
                 self.load_level()
                 return
 
@@ -89,7 +94,7 @@ class Game:
             self.player.update()
 
             if self.carry or self.points:
-                if time.time() - self.last_move > 0.3:
+                if time.time() - self.last_move > 0.25:
                     self.enemy.update(self.player, self.level.maze)
                     self.last_move = time.time()
 
@@ -240,21 +245,24 @@ class Game:
         pygame.quit()
     
     def load_level(self):
-        self.level_cnt += 1
         self.last_move = 0
 
         self.level = importlib.import_module(f"levels.level{self.level_cnt}")
+        importlib.reload(self.level)
+
         self.player = Player(*self.level.player_spawn)
         self.enemy = Enemy(*self.level.enemy_spawn)
+
+        self.randomize_dorayaki()
 
         self.game_over = False
         self.game_victory = False
 
         self.renderer = Renderer(self.screen)
-        self.renderer.draw_maze(self.level, self.level.type)
+        self.renderer.draw_maze(self, self.level.type)
 
         self.tutorial = TutorialOverlay(self.screen)
-        
+
         self.carry = False
         self.first_pick = False
         self.points = 0
