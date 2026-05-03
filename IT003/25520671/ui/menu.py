@@ -71,6 +71,7 @@ class Menu:
                                 self.selected = 0
                                 self.username = ""
                                 self.password = ""
+                                self.active = "username"
                             else:
                                 if data == "no_user":
                                     self.message = "Username khong ton tai!"
@@ -81,9 +82,15 @@ class Menu:
 
                         else:
                             ok, msg = auth.register(self.username, self.password)
-                            print(msg)
+
                             if ok:
                                 self.state = "auth"
+                                self.username = ""
+                                self.password = ""
+                                self.active = "username"
+                            else:
+                                self.message = msg
+                                self.message_time = pygame.time.get_ticks()
 
                     elif event.key == pygame.K_BACKSPACE:
                         if self.active == "username":
@@ -118,6 +125,7 @@ class Menu:
                                 self.selected = 0
                                 self.username = ""
                                 self.password = ""
+                                self.active = "username"
                             else:
                                 if data == "no_user":
                                     self.message = "Username khong ton tai!"
@@ -128,9 +136,15 @@ class Menu:
 
                         else:
                             ok, msg = auth.register(self.username, self.password)
-                            print(msg)
+
                             if ok:
                                 self.state = "auth"
+                                self.username = ""
+                                self.password = ""
+                                self.active = "username"
+                            else:
+                                self.message = msg
+                                self.message_time = pygame.time.get_ticks()
 
     def select(self):
         if self.state == "auth":
@@ -194,13 +208,26 @@ class Menu:
             if self.message:
                 if pygame.time.get_ticks() - self.message_time < 2000:
 
-                    box = pygame.Surface((400, 80))
+                    msg = font.render(self.message, True, (255,255,255))
+
+                    box_width = msg.get_width() + 40
+                    box_height = msg.get_height() + 30
+
+                    box = pygame.Surface((box_width, box_height))
                     box.fill((150, 0, 0))
                     box.set_alpha(220)
 
-                    self.screen.blit(box, (WIDTH//2 - 200, HEIGHT//2 - 40))
+                    box_x = WIDTH//2 - box_width//2
+                    box_y = HEIGHT//2 - box_height//2
 
-                    msg = font.render(self.message, True, (255,255,255))
+                    self.screen.blit(box, (box_x, box_y))
+                    self.screen.blit(
+                        msg,
+                        (
+                            WIDTH//2 - msg.get_width()//2,
+                            HEIGHT//2 - msg.get_height()//2
+                        )
+                    )
                     self.screen.blit(
                         msg,
                         (WIDTH//2 - msg.get_width()//2,

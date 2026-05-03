@@ -20,8 +20,14 @@ def save_users(users):
 def register(username, password):
     users = load_users()
 
+    if username.strip() == "":
+        return False, "Username khong duoc de trong"
+    
+    if password.strip() == "":
+        return False, "Password khong duoc de trong"
+    
     if username in users:
-        return False, "Username đã tồn tại"
+        return False, "Username da ton tai"
 
     users[username] = {
         "password": hash_password(password),
