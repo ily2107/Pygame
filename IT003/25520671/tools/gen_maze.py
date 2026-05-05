@@ -1,6 +1,6 @@
 import random
 
-ROWS, COLS = 24, 16
+ROWS, COLS = 32, 22
 
 dx = [0, 1, 0, -1]
 dy = [1, 0, -1, 0]
@@ -29,13 +29,41 @@ def gen_lv1():
                             if maze[tx][ty] == 0:
                                 cnt += 1
 
-                    if cnt <= 1 or random.random() < 0.05:
+                    if cnt <= 1:
                         dfs(nx, ny)
 
     dfs(0, 1)
     dfs(1, 0)
 
+    def braid(chance=0.35):
+        for x in range(COLS):
+            for y in range(ROWS):
+
+                if maze[x][y] == 1:
+                    continue
+
+                dirs = [(1,0),(-1,0),(0,1),(0,-1)]
+
+                open_cnt = 0
+                walls = []
+
+                for dx_, dy_ in dirs:
+                    nx, ny = x + dx_, y + dy_
+
+                    if 0 <= nx < COLS and 0 <= ny < ROWS:
+                        if maze[nx][ny] == 0:
+                            open_cnt += 1
+                        else:
+                            walls.append((nx, ny))
+
+                if open_cnt == 1 and len(walls) > 1 and random.random() < chance:
+                    wx, wy = random.choice(walls)
+                    maze[wx][wy] = 0
+
+    braid()
+
     return maze
+
 
 maze = gen_lv1()
 

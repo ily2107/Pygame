@@ -5,8 +5,8 @@ class Enemy:
         self.grid_x = x
         self.grid_y = y
 
-        self.px = x * 40
-        self.py = y * 40
+        self.px = x * 30
+        self.py = y * 30
 
     def bfs(self, start, goal, maze):
         queue = deque([start])
@@ -61,5 +61,5 @@ class Enemy:
             self.grid_x = next_x
             self.grid_y = next_y
 
-            self.px = self.grid_x * 40
-            self.py = self.grid_y * 40
+            self.px = self.grid_x * 30
+            self.py = self.grid_y * 30

@@ -5,17 +5,18 @@ class Player:
         self.grid_x = x
         self.grid_y = y
 
-        self.px = x * 40
-        self.py = y * 40
+        self.px = x * 30
+        self.py = y * 30
 
         self.target_x = self.px 
         self.target_y = self.py
         
-        self.speed = 4
+        self.speed = 5
         self.moving = False
+        self.cooldown = 0
     
     def handle_input(self, keys, maze):
-        if self.moving: 
+        if self.moving or self.cooldown > 0: 
             return
         nx, ny = self.grid_x, self.grid_y
         if keys[pygame.K_LEFT]:
@@ -31,11 +32,15 @@ class Player:
             return
         
         self.grid_x, self.grid_y = nx, ny
-        self.target_x, self.target_y = nx * 40, ny * 40
+        self.target_x, self.target_y = nx * 30, ny * 30
 
         self.moving = True
     
     def update(self):
+        if self.cooldown > 0:
+            self.cooldown -= 1
+            return
+        
         if not self.moving:
             return
         
@@ -51,4 +56,5 @@ class Player:
 
         if self.px == self.target_x and self.py == self.target_y:
             self.moving = False
+            self.cooldown = 3
         

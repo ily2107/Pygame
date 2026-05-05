@@ -9,50 +9,54 @@ class Renderer:
 
         self.exit_close_image = pygame.image.load("assets/ChatGPT Image Apr 16, 2026, 03_53_08 PM.png").convert_alpha()
         self.exit_close_image.set_colorkey((0, 0, 0))
-        self.exit_close_image = pygame.transform.scale(self.exit_close_image, (40, 50))
+        self.exit_close_image = pygame.transform.scale(self.exit_close_image, (30, 37))
 
         self.exit_open_image = pygame.image.load("assets/ChatGPT Image Apr 16, 2026, 03_06_34 PM.png").convert_alpha()
         self.exit_open_image.set_colorkey((0, 0, 0))
-        self.exit_open_image = pygame.transform.scale(self.exit_open_image, (40, 50))
+        self.exit_open_image = pygame.transform.scale(self.exit_open_image, (30, 37))
 
         self.doraemon_image = pygame.image.load("assets/Doraemon_character.png").convert_alpha()
         self.doraemon_image.set_colorkey((0, 0, 0))
-        self.doraemon_image = pygame.transform.scale(self.doraemon_image, (40, 40))
+        self.doraemon_image = pygame.transform.scale(self.doraemon_image, (30, 30))
 
         self.doraemon_eating_image = pygame.image.load("assets/1293-con-so-may-man-cua-doraemon-583174.png").convert_alpha()
         self.doraemon_eating_image.set_colorkey((0, 0, 0))
-        self.doraemon_eating_image = pygame.transform.scale(self.doraemon_eating_image, (40, 40))
+        self.doraemon_eating_image = pygame.transform.scale(self.doraemon_eating_image, (30, 30))
 
         self.dorayaki_image = pygame.image.load("assets/ChatGPT Image Apr 16, 2026, 04_23_13 PM.png").convert_alpha()
         self.dorayaki_image.set_colorkey((0, 0, 0))
-        self.dorayaki_image = pygame.transform.scale(self.dorayaki_image, (40, 40))
+        self.dorayaki_image = pygame.transform.scale(self.dorayaki_image, (30, 30))
 
         wall_image2_1 = pygame.image.load("assets/Screenshot 2026-04-14 163254.png").convert_alpha()
         wall_image2_2 = pygame.image.load("assets/Screenshot 2026-04-14 163322.png").convert_alpha()
         wall_image2_3 = pygame.image.load("assets/Screenshot 2026-04-14 163555.png").convert_alpha()
         wall_image2_4 = pygame.image.load("assets/Screenshot 2026-04-14 160239.png").convert_alpha()
         
-        wall_image2_1 = pygame.transform.scale(wall_image2_1, (40, 40))
-        wall_image2_2 = pygame.transform.scale(wall_image2_2, (40, 40))
-        wall_image2_3 = pygame.transform.scale(wall_image2_3, (40, 40))
-        wall_image2_4 = pygame.transform.scale(wall_image2_4, (40, 40))
+        wall_image2_1 = pygame.transform.scale(wall_image2_1, (30, 30))
+        wall_image2_2 = pygame.transform.scale(wall_image2_2, (30, 30))
+        wall_image2_3 = pygame.transform.scale(wall_image2_3, (30, 30))
+        wall_image2_4 = pygame.transform.scale(wall_image2_4, (30, 30))
 
         self.wall_images2 = [wall_image2_1, wall_image2_2, wall_image2_3, wall_image2_4]
 
         self.path_image2 = pygame.image.load("assets/Screenshot 2026-04-14 162414.png").convert_alpha()
-        self.path_image2 = pygame.transform.scale(self.path_image2, (40, 40))
+        self.path_image2 = pygame.transform.scale(self.path_image2, (30, 30))
 
         self.path_image3 = pygame.image.load("assets/0e5aa738-90d6-4d47-909c-75c6a6e88d50.png").convert_alpha()
         self.path_image3.set_colorkey((0, 0, 0))
-        self.path_image3 = pygame.transform.scale(self.path_image3, (42, 42))
+        self.path_image3 = pygame.transform.scale(self.path_image3, (31, 31))
 
         self.player_image = pygame.image.load("assets/nobita4 (1)-Picsart-AiImageEnhancer.png").convert_alpha()
         self.player_image.set_colorkey((0, 0, 0))
-        self.player_image = pygame.transform.scale(self.player_image, (40, 40))
+        self.player_image = pygame.transform.scale(self.player_image, (30, 30))
 
         self.enemy_image = pygame.image.load("assets/anh-chaien-dang-tuc-gian-1747363266910-17473632669.png").convert()
         self.enemy_image.set_colorkey((0, 0, 0))
-        self.enemy_image = pygame.transform.scale(self.enemy_image, (40, 40))
+        self.enemy_image = pygame.transform.scale(self.enemy_image, (30, 30))
+
+        self.support_enemy_image = pygame.image.load("assets/anh-suneo-02_preview_rev_1.png").convert_alpha()
+        self.support_enemy_image.set_colorkey((0, 0, 0))
+        self.support_enemy_image = pygame.transform.scale(self.support_enemy_image, (30, 30))
 
     def draw_wall_block1(self, surface, x, y):
         colors = {
@@ -63,32 +67,42 @@ class Renderer:
         }
 
         pattern = [
-            "12222322232222322321",
-            "22333433343334333432",
-            "23344344434443444332",
-            "33432233322333223433",
-            "24333344433344433342",
-            "33444333344333344433",
-            "22333222333222333322",
-            "23344433444334444332",
-            "33433322333223333433",
-            "24334443344433443342",
-            "33422333223332223343",
-            "22333444334443433322",
-            "23344333322333344432",
-            "33433344433444333343",
-            "24332233322333223342",
-            "33444433444334444433",
-            "22333322333223333322",
-            "23344443344433444332",
-            "22333433343334333432",
-            "12222322232222322321",
+            "112222222332222332222322322211",
+            "112222222332222332222322322211",
+            "222333333443333443333433433322",
+            "222333333443333443333433433322",
+            "233344444344444344444344433322",
+            "333344442233333223333222344333",
+            "333344442233333223333222344333",
+            "224333333444433344444333333422",
+            "333344444333333444333333444333",
+            "333344444333333444333333444333",
+            "222333333222333332222333333222",
+            "223334444443334444433444443322",
+            "223334444443334444433444443322",
+            "333344333322333332233333344333",
+            "224333444443344444333444433422",
+            "224333444443344444333444433422",
+            "333344222333322333322222333433",
+            "222333334444433444443433333222",
+            "222333334444433444443433333222",
+            "233344444333333222333344444322",
+            "333344333344444333444433333433",
+            "333344333344444333444433333433",
+            "224333322333333223333222333422",
+            "333344444443334444433444444333",
+            "333344444443334444433444444333",
+            "222333333332233333223333333222",
+            "223334444443344444333444433322",
+            "223334444443344444333444433322",
+            "222333333443333443333433433322",
+            "112222222332222332222322322211",
         ]
 
-        for row in range(20):
-            for col in range(20):
+        for row in range(30):
+            for col in range(30):
                 c = pattern[row][col]
-                pygame.draw.rect(surface, colors[c], (x + 2 * col, y + 2 * row, 2, 2))
+                pygame.draw.rect(surface, colors[c], (x + col, y + row, 1, 1))
 
     def draw_wall_block2(self, surface, x, y, type):
         surface.blit(self.wall_images2[type], (x, y))
@@ -104,38 +118,42 @@ class Renderer:
         }
 
         pattern = [
-            "12222322222232222221",
-            "22333433322334333432",
-            "23344344433443444332",
-            "33432233344333223433",
-            "24333344433344433342",
-            "33444333344333344433",
-            "22333222333222333322",
-            "23344433444334444332",
-            "33433322333223333433",
-            "24334443344433443342",
-            "33422333223332223343",
-            "22333444334443433322",
-            "23344333322333344432",
-            "33433344433444333343",
-            "24332233322333223342",
-            "33444433444334444433",
-            "22333322333223333322",
-            "23344443344433444332",
-            "22333433343334333432",
-            "12222322232222322321",
+            "112222223222222222332222222221",
+            "112222223222222222332222222221",
+            "222333334333332223334333334332",
+            "223334443444443334443444443332",
+            "223334443444443334443444443332",
+            "333443222333334443333222334333",
+            "224333333444443333444443333442",
+            "224333333444443333444443333442",
+            "333444443333334443333334444333",
+            "222333332222333332222333333222",
+            "222333332222333332222333333222",
+            "223334444333444443334444443332",
+            "333443333222333332223333334333",
+            "333443333222333332223333334333",
+            "224333444443334444333444333442",
+            "333442223333222333332222333443",
+            "333442223333222333332222333443",
+            "222333334444333444443443333222",
+            "223334443333332223333334444332",
+            "223334443333332223333334444332",
+            "333443333444443334444333333443",
+            "224333222333332223333222333442",
+            "224333222333332223333222333442",
+            "333444444333444443334444444333",
+            "222333333222333332223333333222",
+            "222333333222333332223333333222",
+            "223334444443334444333444443332",
+            "222333334333334333334333334332",
+            "222333334333334333334333334332",
+            "112222223222223222222332223221",
         ]
 
-        pixel_size = 2
-
-        for row in range(20):
-            for col in range(20):
+        for row in range(30):
+            for col in range(30):
                 c = pattern[row][col]
-                pygame.draw.rect(
-                    surface,
-                    colors[c],
-                    (x + col * pixel_size, y + row * pixel_size, pixel_size, pixel_size)
-                )
+                pygame.draw.rect(surface, colors[c], (x + col, y + row, 1, 1))
 
     def draw_path_block1(self, surface, x, y):
         colors = {
@@ -146,72 +164,85 @@ class Renderer:
         }
 
         pattern = [
-            "11111111111111111111",
-            "12222222222222222221",
-            "12322222232222222221",
-            "12222222222222242221",
-            "12222322222222222221",
-            "12222222222232222221",
-            "12222242222222222221",
-            "12222222222322222221",
-            "12222222222222222221",
-            "12223222222222222221",
-            "12222222222224222221",
-            "12222222222222232221",
-            "12222222322222222221",
-            "12222222222222222221",
-            "12242222222223222221",
-            "12222222222222222221",
-            "12222232222222222221",
-            "12222222222222242221",
-            "12222222222222222221",
-            "11111111111111111111",
+            "111111111111111111111111111111",
+            "111111111111111111111111111111",
+            "112222222222222222222222222221",
+            "112332222222223222222222222221",
+            "112332222222223222222222222221",
+            "112222222222222222222224222221",
+            "112222223222222222222222222221",
+            "112222223222222222222222222221",
+            "112222222222222222332222222221",
+            "112222222442222222222222222221",
+            "112222222442222222222222222221",
+            "112222222222222223222222222221",
+            "112222222222222222222222222221",
+            "112222222222222222222222222221",
+            "112222332222222222222222222221",
+            "112222222222222222224222222221",
+            "112222222222222222224222222221",
+            "112222222222222222222223222221",
+            "112222222222332222222222222221",
+            "112222222222332222222222222221",
+            "112222222222222222222222222221",
+            "112224222222222222223222222221",
+            "112224222222222222223222222221",
+            "112222222222222222222222222221",
+            "112222222332222222222222222221",
+            "112222222332222222222222222221",
+            "112222222222222222222224222221",
+            "112222222222222222222222222221",
+            "112222222222222222222222222221",
+            "111111111111111111111111111111",
         ]
 
-        for row in range(20):
-            for col in range(20):
+        for row in range(30):
+            for col in range(30):
                 c = pattern[row][col]
-                pygame.draw.rect(surface, colors[c], (x + 2 * col, y + 2 * row, 2, 2))
+                pygame.draw.rect(surface, colors[c], (x + col, y + row, 1, 1))
 
     def draw_path_block2(self, surface, x, y):
-        pygame.draw.rect(surface, (148, 218, 0), (x, y, 40, 40))
+        pygame.draw.rect(surface, (148, 218, 0), (x, y, 30, 30))
         surface.blit(self.path_image2, (x, y))
     
     def draw_path_block3(self, surface, x, y):
-        pygame.draw.rect(surface, (64, 158, 180), (x, y, 40, 40))
+        pygame.draw.rect(surface, (64, 158, 180), (x, y, 30, 30))
         surface.blit(self.path_image3, (x, y))
 
     def draw_maze(self, game, type):
-        self.maze_surface = pygame.Surface((game.level.maze.cols * 40, game.level.maze.rows * 40))
-        arr = [[0 for _ in range(game.level.maze.cols)] for _ in range(game.level.maze.rows)]
-        for x in range(game.level.maze.rows):
-            for y in range(game.level.maze.cols):
+        self.maze_surface = pygame.Surface((game.maze.cols * 30, game.maze.rows * 30))
+        arr = [[0 for _ in range(game.maze.cols)] for _ in range(game.maze.rows)]
+        for x in range(game.maze.rows):
+            for y in range(game.maze.cols):
                 arr[x][y] = random.randint(0,3)
 
-        for x in range(game.level.maze.rows):
-            for y in range(game.level.maze.cols):
-                cell=game.level.maze.grid[x][y]
+        for x in range(game.maze.rows):
+            for y in range(game.maze.cols):
+                cell=game.maze.grid[x][y]
                 if type == 1:
                     if cell.type=="Wall": 
-                        self.draw_wall_block1(self.maze_surface, y * 40, x * 40)
+                        self.draw_wall_block1(self.maze_surface, y * 30, x * 30)
                     else: 
-                        self.draw_path_block1(self.maze_surface, y * 40, x * 40)
+                        self.draw_path_block1(self.maze_surface, y * 30, x * 30)
                 elif type == 2:
                     if cell.type=="Wall": 
-                        self.draw_wall_block2(self.maze_surface, y * 40, x * 40, arr[x][y])
+                        self.draw_wall_block2(self.maze_surface, y * 30, x * 30, arr[x][y])
                     else: 
-                        self.draw_path_block2(self.maze_surface, y * 40, x * 40)
+                        self.draw_path_block2(self.maze_surface, y * 30, x * 30)
                 else:
                     if cell.type=="Wall": 
-                        self.draw_wall_block3(self.maze_surface, y * 40, x * 40)
+                        self.draw_wall_block3(self.maze_surface, y * 30, x * 30)
                     else: 
-                        self.draw_path_block3(self.maze_surface, y * 40, x * 40)
+                        self.draw_path_block3(self.maze_surface, y * 30, x * 30)
         
-        self.maze_surface.blit(self.exit_close_image, (game.level.goal_x * 40, game.level.goal_y * 40))
-        self.maze_surface.blit(self.doraemon_image, (game.doraemon[1] * 40, game.doraemon[0] * 40))
+        self.maze_surface.blit(self.exit_close_image, (game.goal_x * 30, game.goal_y * 30))
+        self.maze_surface.blit(self.doraemon_image, (game.doraemon[1] * 30, game.doraemon[0] * 30))
                 
     def draw_player(self, surface, player):
         surface.blit(self.player_image, (player.px, player.py))
 
     def draw_enemy(self, surface, enemy):
         surface.blit(self.enemy_image, (enemy.px, enemy.py))
+
+    def draw_support_enemy(self, surface, support_enemy):
+        surface.blit(self.support_enemy_image, (support_enemy.px, support_enemy.py))

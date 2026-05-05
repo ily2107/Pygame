@@ -1,4 +1,4 @@
-WIDTH, HEIGHT = 960, 640
+WIDTH, HEIGHT = 960, 660
 FPS = 60
 
 TITLE = "NOBITA chạy trốn"

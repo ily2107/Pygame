@@ -50,7 +50,7 @@ class Menu:
                     elif event.key == pygame.K_DOWN:
                         self.selected = (self.selected + 1) % len(self.options)
 
-                    elif event.key == pygame.K_SPACE:
+                    elif event.key == pygame.K_RETURN:
                         self.select()
 
             elif self.state in ["input_login", "input_register"]:
@@ -185,8 +185,21 @@ class Menu:
             t = font.render(title, True, (255,255,255))
             self.screen.blit(t, (WIDTH//2 - t.get_width()//2, 100))
 
-            u = font.render("User: " + self.username, True, (255,255,255))
-            p = font.render("Pass: " + "*"*len(self.password), True, (255,255,255))
+            user_text = "User: " + self.username
+
+            if self.active == "username":
+                if (pygame.time.get_ticks() // 500) % 2 == 0:
+                    user_text += "|"
+
+            u = font.render(user_text, True, (255,255,255))
+            
+            pass_text = "Pass: " + "*" * len(self.password)
+
+            if self.active == "password":
+                if (pygame.time.get_ticks() // 500) % 2 == 0:
+                    pass_text += "|"
+
+            p = font.render(pass_text, True, (255,255,255))
 
             self.screen.blit(u, (100, 200))
             self.screen.blit(p, (100, 260))
