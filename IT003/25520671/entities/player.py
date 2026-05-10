@@ -14,6 +14,8 @@ class Player:
         self.speed = 5
         self.moving = False
         self.cooldown = 0
+
+        self.inventory = []
     
     def handle_input(self, keys, maze):
         if self.moving or self.cooldown > 0: 

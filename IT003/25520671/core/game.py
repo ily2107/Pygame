@@ -24,8 +24,6 @@ class Game:
         self.game_victory = False
 
         self.renderer = Renderer(self.screen)
-        self.tutorial = TutorialOverlay(self.screen)
-
 
     def load_level(self):
         module = importlib.import_module(f"levels.level{self.level_cnt}")
@@ -44,17 +42,19 @@ class Game:
         self.renderer.draw_maze(self.level, self.level.type)
 
     def run(self):
+        self.menu.run()
         while True:
-            self.menu.run()
             self.load_level()
-            self.tutorial.show(self.level_cnt, self.renderer,self.level.tutorial_data)
+            self.level.show_tutorial(self.screen, self.renderer,self.level.tutorial_data)
             self.run_game()
 
     def run_game(self):
         running = True
 
         while running:
-            for event in pygame.event.get():
+            events = pygame.event.get()
+
+            for event in events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
@@ -85,10 +85,9 @@ class Game:
                     "level": self.level_cnt
                 })
 
-                self.load_level()
                 return
 
-            self.level.update()
+            self.level.update(events,self.screen,self.renderer)
             self.level.draw(self.renderer, self.screen)
 
             pygame.display.flip()

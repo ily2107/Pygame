@@ -1,19 +1,27 @@
+import pygame
 from collections import deque
 
-class Enemy:
+TILE = 30
+
+class MiniBoss:
     def __init__(self, x, y):
         self.grid_x = x
         self.grid_y = y
 
-        self.px = x * 30
-        self.py = y * 30
+        self.px = x * TILE
+        self.py = y * TILE
+
+        self.path = []
+
+        self.step_delay = 30
+        self.step_cd = 0
 
     def bfs(self, start, goal, maze):
         queue = deque([start])
-        visited = set()
-        parent = {}
 
-        visited.add(start)
+        visited = set([start])
+
+        parent = {}
 
         while queue:
             x, y = queue.popleft()
@@ -21,9 +29,7 @@ class Enemy:
             if (x, y) == goal:
                 break
 
-            moves = [(1,0), (-1,0), (0,1), (0,-1)]
-
-            for dx, dy in moves:
+            for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
                 nx = x + dx
                 ny = y + dy
 
@@ -34,32 +40,45 @@ class Enemy:
                     continue
 
                 visited.add((nx, ny))
+
                 parent[(nx, ny)] = (x, y)
+
                 queue.append((nx, ny))
 
+        if goal not in visited:
+            return []
+
         path = []
+
         cur = goal
 
         while cur != start:
             path.append(cur)
-            cur = parent.get(cur)
-            if cur is None:
-                return []
+            cur = parent[cur]
 
         path.reverse()
+
         return path
 
-    def update(self, player, maze):
+    def go_to(self, target, maze):
         start = (self.grid_x, self.grid_y)
-        goal = (player.grid_x, player.grid_y)
 
-        path = self.bfs(start, goal, maze)
+        self.path = self.bfs(start, target, maze)
 
-        if len(path) > 0:
-            next_x, next_y = path[0]
+    def update(self):
+        if self.step_cd > 0:
+            self.step_cd -= 1
+            return
 
-            self.grid_x = next_x
-            self.grid_y = next_y
+        if len(self.path) == 0:
+            return
 
-            self.px = self.grid_x * 30
-            self.py = self.grid_y * 30
+        nx, ny = self.path.pop(0)
+
+        self.grid_x = nx
+        self.grid_y = ny
+
+        self.px = nx * TILE
+        self.py = ny * TILE
+
+        self.step_cd = self.step_delay

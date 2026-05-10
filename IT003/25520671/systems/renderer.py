@@ -7,6 +7,34 @@ class Renderer:
         self.screen=screen
         self.maze_surface = None
 
+        wall_image2_1 = pygame.image.load("assets/Screenshot 2026-04-14 163254.png").convert_alpha()
+        wall_image2_2 = pygame.image.load("assets/Screenshot 2026-04-14 163322.png").convert_alpha()
+        wall_image2_3 = pygame.image.load("assets/Screenshot 2026-04-14 163555.png").convert_alpha()
+        wall_image2_4 = pygame.image.load("assets/Screenshot 2026-04-14 160239.png").convert_alpha()
+        
+        wall_image2_1 = pygame.transform.scale(wall_image2_1, (25, 25))
+        wall_image2_2 = pygame.transform.scale(wall_image2_2, (25, 25))
+        wall_image2_3 = pygame.transform.scale(wall_image2_3, (25, 25))
+        wall_image2_4 = pygame.transform.scale(wall_image2_4, (25, 25))
+
+        self.wall_images2 = [wall_image2_1, wall_image2_2, wall_image2_3, wall_image2_4]
+        
+        for i in range(4):
+            img = pygame.transform.scale(self.wall_images2[i], (25, 25))
+
+            mask = pygame.Surface((25, 25), pygame.SRCALPHA)
+            pygame.draw.rect(mask, (255,255,255), (0,0,25,25), border_radius=6)
+
+            img.blit(mask, (0,0), special_flags=pygame.BLEND_RGBA_MULT)
+            self.wall_images2[i] = img
+
+        self.path_image2 = pygame.image.load("assets/Screenshot 2026-04-14 162414.png").convert_alpha()
+        self.path_image2 = pygame.transform.scale(self.path_image2, (30, 30))
+
+        self.path_image3 = pygame.image.load("assets/0e5aa738-90d6-4d47-909c-75c6a6e88d50.png").convert_alpha()
+        self.path_image3.set_colorkey((0, 0, 0))
+        self.path_image3 = pygame.transform.scale(self.path_image3, (31, 31))
+
         self.exit_close_image = pygame.image.load("assets/ChatGPT Image Apr 16, 2026, 03_53_08 PM.png").convert_alpha()
         self.exit_close_image.set_colorkey((0, 0, 0))
         self.exit_close_image = pygame.transform.scale(self.exit_close_image, (30, 37))
@@ -27,24 +55,21 @@ class Renderer:
         self.dorayaki_image.set_colorkey((0, 0, 0))
         self.dorayaki_image = pygame.transform.scale(self.dorayaki_image, (30, 30))
 
-        wall_image2_1 = pygame.image.load("assets/Screenshot 2026-04-14 163254.png").convert_alpha()
-        wall_image2_2 = pygame.image.load("assets/Screenshot 2026-04-14 163322.png").convert_alpha()
-        wall_image2_3 = pygame.image.load("assets/Screenshot 2026-04-14 163555.png").convert_alpha()
-        wall_image2_4 = pygame.image.load("assets/Screenshot 2026-04-14 160239.png").convert_alpha()
-        
-        wall_image2_1 = pygame.transform.scale(wall_image2_1, (30, 30))
-        wall_image2_2 = pygame.transform.scale(wall_image2_2, (30, 30))
-        wall_image2_3 = pygame.transform.scale(wall_image2_3, (30, 30))
-        wall_image2_4 = pygame.transform.scale(wall_image2_4, (30, 30))
+        self.paper_image = [
+            pygame.transform.scale(pygame.image.load(path).convert_alpha(), (30, 30))
+            for path in [
+                "assets/d3ed1459-e77e-43eb-89e8-7d87eae58ee0.png",
+                "assets/ChatGPT Image May 8, 2026, 08_53_44 PM.png",
+                "assets/ChatGPT Image May 10, 2026, 12_49_43 AM.png"
+            ]
+        ]
 
-        self.wall_images2 = [wall_image2_1, wall_image2_2, wall_image2_3, wall_image2_4]
+        for img in self.paper_image:
+            img.set_colorkey((0, 0, 0))
 
-        self.path_image2 = pygame.image.load("assets/Screenshot 2026-04-14 162414.png").convert_alpha()
-        self.path_image2 = pygame.transform.scale(self.path_image2, (30, 30))
-
-        self.path_image3 = pygame.image.load("assets/0e5aa738-90d6-4d47-909c-75c6a6e88d50.png").convert_alpha()
-        self.path_image3.set_colorkey((0, 0, 0))
-        self.path_image3 = pygame.transform.scale(self.path_image3, (31, 31))
+        self.miniboss_image = pygame.image.load("assets/1746526097210886618017-1746586971234-1746586971322469050790.png").convert_alpha()
+        self.miniboss_image.set_colorkey((0, 0, 0))
+        self.miniboss_image = pygame.transform.scale(self.miniboss_image, (30, 30))
 
         self.player_image = pygame.image.load("assets/nobita4 (1)-Picsart-AiImageEnhancer.png").convert_alpha()
         self.player_image.set_colorkey((0, 0, 0))
@@ -105,7 +130,15 @@ class Renderer:
                 pygame.draw.rect(surface, colors[c], (x + col, y + row, 1, 1))
 
     def draw_wall_block2(self, surface, x, y, type):
-        surface.blit(self.wall_images2[type], (x, y))
+        pygame.draw.rect(surface, (128, 196, 28), (x, y, 30, 30))
+        shadow = pygame.Surface((30, 30), pygame.SRCALPHA)
+
+        pygame.draw.rect(shadow, (0,0,0,10), (0,0,30,15))
+        pygame.draw.rect(shadow, (0,0,0,30), (0,15,30,15))
+        
+        rect = self.wall_images2[type].get_rect(center=(x + 15, y + 15))
+        surface.blit(self.wall_images2[type], rect)
+        surface.blit(shadow, (x, y))
 
     def draw_wall_block3(self, surface, x, y):
         colors = {
@@ -202,8 +235,26 @@ class Renderer:
                 pygame.draw.rect(surface, colors[c], (x + col, y + row, 1, 1))
 
     def draw_path_block2(self, surface, x, y):
-        pygame.draw.rect(surface, (148, 218, 0), (x, y, 30, 30))
-        surface.blit(self.path_image2, (x, y))
+        grass = [
+            (118, 186, 20),
+            (108, 172, 16),
+            (98, 160, 12),
+            (128, 196, 28),
+        ]
+
+        base = (108, 172, 16)
+        pygame.draw.rect(surface, base, (x, y, 30, 30))
+
+        for _ in range(45):
+            gx = random.randint(0, 29)
+            gy = random.randint(0, 29)
+
+            w = random.randint(2, 4)
+            h = random.randint(1, 3)
+
+            color = random.choice(grass)
+
+            pygame.draw.rect(surface, color, (x + gx, y + gy, w, h))
     
     def draw_path_block3(self, surface, x, y):
         pygame.draw.rect(surface, (64, 158, 180), (x, y, 30, 30))
@@ -246,3 +297,6 @@ class Renderer:
 
     def draw_support_enemy(self, surface, support_enemy):
         surface.blit(self.support_enemy_image, (support_enemy.px, support_enemy.py))
+
+    def draw_miniboss(self, surface, miniboss):
+        surface.blit(self.miniboss_image, (miniboss.px, miniboss.py))

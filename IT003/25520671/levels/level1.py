@@ -2,15 +2,16 @@ import random
 import time
 import math
 import pygame
+from setting import *
 from core.maze import Maze
 from entities.player import Player
-from entities.enemy import Enemy
+from entities.foe.enemy import Enemy
 
 class Level1:
     def __init__(self, game):
         self.game = game
 
-        self.type = random.randint(1, 3)
+        self.type = 3
         self.map = random.randint(1, 3)
 
         self.maze = Maze.load_from_txt(f"maps/level1/map{self.map}.txt")
@@ -32,7 +33,6 @@ class Level1:
         self.alpha = 255
         self.alpha_dir = -5
         self.sun_angle = 0
-        self.last_move = 0
 
         self.tutorial_data = {
             "lines": [
@@ -84,16 +84,16 @@ class Level1:
         self.dorayaki = positions[:3]
         
 
-    def update(self):
+    def update(self, events, screen, renderer):
         keys = pygame.key.get_pressed()
 
         self.player.handle_input(keys, self.maze)
         self.player.update()
 
         if self.carry or self.points:
-            if time.time() - self.last_move > 0.4 - (self.carry + self.points) * 0.05:
+            if time.time() - self.enemy.last_move > 0.4 - (self.carry + self.points) * 0.05:
                 self.enemy.update(self.player, self.maze)
-                self.last_move = time.time()
+                self.enemy.last_move = time.time()
 
         if (self.enemy.grid_x == self.player.grid_x and self.enemy.grid_y == self.player.grid_y):
             self.game.game_over = True
@@ -177,3 +177,61 @@ class Level1:
                 pygame.draw.line(screen, (255, 200, 0), (x1, y1), (x2, y2), 3)
 
             screen.blit(img, (y * 30, x * 30))
+
+    def show_tutorial(self, screen, renderer, data):
+        font_big = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 60)
+        font_small = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 32)
+        font_note = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 26)
+
+        overlay = pygame.Surface((WIDTH, HEIGHT))
+        overlay.set_alpha(120)
+        overlay.fill((0, 0, 0))
+
+        box_w, box_h = 720, 480
+        box_x = (WIDTH - box_w) // 2
+        box_y = (HEIGHT - box_h) // 2
+
+        title = font_big.render("LEVEL 1", True, (255, 255, 0))
+
+        lines = [font_small.render(line, True, (255,255,255)) for line in data["lines"]]
+
+        note_text = None
+        if "note" in data:
+            note_text = font_note.render(data["note"], True, (150,150,150))
+
+        press_text = font_small.render("Press SPACE to start", True, (200, 200, 200))
+
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        return
+
+            screen.blit(renderer.maze_surface, (0, 0))
+            screen.blit(overlay, (0, 0))
+
+            pygame.draw.rect(screen, (30, 30, 30), (box_x, box_y, box_w, box_h), border_radius=20)
+            pygame.draw.rect(screen, (200, 200, 200), (box_x, box_y, box_w, box_h), 3, border_radius=20)
+
+            screen.blit(title, (WIDTH//2 - title.get_width()//2, box_y + 50))
+
+            y = box_y + 140
+            for line in lines:
+                screen.blit(line, (WIDTH//2 - line.get_width()//2, y))
+                y += 50
+
+            if note_text:
+                screen.blit(note_text, (WIDTH//2 - note_text.get_width()//2, y))
+                y += 60
+
+            alpha = (math.sin(pygame.time.get_ticks() * 0.005) + 1) * 127
+            img = press_text.copy()
+            img.set_alpha(alpha)
+
+            screen.blit(img, (WIDTH//2 - img.get_width()//2, box_y + 360))
+
+            pygame.display.flip()
