@@ -9,8 +9,8 @@ dy = [1, 0, -1, 0]
 
 configs = {
     1: {
-        "braid": 0.25,
-        "rooms": 3,
+        "braid": 0.45,
+        "rooms": 6,
         "room_size": 2
     },
 
@@ -21,8 +21,8 @@ configs = {
     },
 
     3: {
-        "braid": 0.8,
-        "rooms": 15,
+        "braid": 0.7,
+        "rooms": 12,
         "room_size": 2
     }
 }
@@ -117,12 +117,12 @@ def save_maze(maze, path):
 
             f.write(line + "\n")
 
-for level in [1, 2, 3]:
+for level in [1]:
     folder = f"maps/level{level}"
 
     os.makedirs(folder, exist_ok=True)
 
-    for idx in range(1, 4):
+    for idx in range(1, 2):
         maze = gen_maze(level)
 
         save_maze(

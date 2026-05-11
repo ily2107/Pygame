@@ -25,6 +25,16 @@ class Menu:
         self.message_time = 0
         self.button_rect = pygame.Rect(WIDTH//2 - 100, 350, 200, 50)
 
+        self.option_rects = []
+        input_w = 520
+        input_h = 45
+        self.start_y = HEIGHT // 2 - 80
+
+        self.username_rect = pygame.Rect(WIDTH // 2 - input_w // 2, self.start_y, input_w, input_h)
+        self.password_rect = pygame.Rect(WIDTH // 2 - input_w // 2, self.start_y + 60, input_w, input_h)
+
+        self.button_rect = pygame.Rect(WIDTH // 2 - 100, self.start_y + 150, 200, 50)
+
     def get_options(self):
         if self.state == "auth":
             return ["Login", "Register"]
@@ -42,16 +52,22 @@ class Menu:
                 exit()
 
             if self.state in ["auth", "main"]:
-                if event.type == pygame.KEYDOWN:
+                # if event.type == pygame.KEYDOWN:
 
-                    if event.key == pygame.K_UP:
-                        self.selected = (self.selected - 1) % len(self.options)
+                #     if event.key == pygame.K_UP:
+                #         self.selected = (self.selected - 1) % len(self.options)
 
-                    elif event.key == pygame.K_DOWN:
-                        self.selected = (self.selected + 1) % len(self.options)
+                #     elif event.key == pygame.K_DOWN:
+                #         self.selected = (self.selected + 1) % len(self.options)
 
-                    elif event.key == pygame.K_RETURN:
-                        self.select()
+                #     elif event.key == pygame.K_RETURN:
+                #         self.select()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        for i, rect in enumerate(self.option_rects):
+                            if rect.collidepoint(event.pos):
+                                self.selected = i
+                                self.select()
 
             elif self.state in ["input_login", "input_register"]:
                 if event.type == pygame.KEYDOWN:
@@ -112,8 +128,13 @@ class Menu:
                     
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.button_rect.collidepoint(event.pos):
+                    if self.username_rect.collidepoint(event.pos):
+                        self.active = "username"
 
+                    elif self.password_rect.collidepoint(event.pos):
+                        self.active = "password"
+
+                    elif self.button_rect.collidepoint(event.pos):
                         import auth
 
                         if self.state == "input_login":
@@ -183,7 +204,7 @@ class Menu:
 
             title = "LOGIN" if self.state == "input_login" else "REGISTER"
             t = font.render(title, True, (255,255,255))
-            self.screen.blit(t, (WIDTH//2 - t.get_width()//2, 100))
+            self.screen.blit(t, (WIDTH//2 - t.get_width()//2, self.start_y - 80))
 
             user_text = "User: " + self.username
 
@@ -201,8 +222,17 @@ class Menu:
 
             p = font.render(pass_text, True, (255,255,255))
 
-            self.screen.blit(u, (100, 200))
-            self.screen.blit(p, (100, 260))
+            user_border = (0, 255, 150) if self.active == "username" else (255, 255, 255)
+            pass_border = (0, 255, 150) if self.active == "password" else (255, 255, 255)
+
+            pygame.draw.rect(self.screen, (10, 12, 18), self.username_rect, border_radius=8)
+            pygame.draw.rect(self.screen, user_border, self.username_rect, 2, border_radius=8)
+
+            pygame.draw.rect(self.screen, (10, 12, 18), self.password_rect, border_radius=8)
+            pygame.draw.rect(self.screen, pass_border, self.password_rect, 2, border_radius=8)
+
+            self.screen.blit(u, (self.username_rect.x + 15, self.username_rect.y + 7))
+            self.screen.blit(p, (self.password_rect.x + 15, self.password_rect.y + 7))
 
             mouse_pos = pygame.mouse.get_pos()
             color = (0, 255, 150) if self.button_rect.collidepoint(mouse_pos) else (0, 200, 100)
@@ -270,14 +300,25 @@ class Menu:
         title = title_font.render(TITLE_GAME, True, TEXT_COLOR)
         self.screen.blit(title, (WIDTH//2 - title.get_width()//2, 50))
 
-        for i,option in enumerate(self.options):
-            color = HIGHLIGHT_COLOR if i == self.selected else TEXT_COLOR
-            text = self.font.render(option, True, color)
+        self.option_rects = []
+        mouse_pos = pygame.mouse.get_pos()
+
+        for i, option in enumerate(self.options):
+            text = self.font.render(option, True, TEXT_COLOR)
 
             x = WIDTH//2 - text.get_width()//2
             y = 150 + i * 60
+            rect = text.get_rect(topleft=(x, y))
 
-            self.screen.blit(text, (x, y))
+            if rect.collidepoint(mouse_pos):
+                self.selected = i
+
+            color = HIGHLIGHT_COLOR if i == self.selected else TEXT_COLOR
+            text = self.font.render(option, True, color)
+            rect = text.get_rect(topleft=(x, y))
+
+            self.option_rects.append(rect)
+            self.screen.blit(text, rect)
         
         pygame.display.flip()
     

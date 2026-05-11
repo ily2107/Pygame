@@ -57,7 +57,7 @@ class Level2:
 
         self.end = False
         self.img = []
-        self.item_image = pygame.image.load("assets/Ma_Ma_Boo.PNG.webp").convert_alpha()
+        self.item_image = pygame.image.load("assets/Ma_Ma_Boo.PNG.jpg").convert_alpha()
 
         self.tutorial_data = {
             "pages": [
@@ -136,8 +136,11 @@ class Level2:
                     walkable.append((j, i))
 
         def far(cell):
-            return abs(cell[0] - self.goal_y) + abs(cell[1] - self.goal_x) + abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[1])
-
+            return min(
+                abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[1]),
+                abs(cell[0] - self.goal_y) + abs(cell[1] - self.goal_x),
+            )
+        
         walkable.sort(key=far, reverse=True)
 
         miniboss = walkable[:len(walkable) // 4]
@@ -170,7 +173,10 @@ class Level2:
                     walkable.append((j, i))
 
         def far_doraemon(cell):
-            return abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[1]) + abs(cell[0] - self.enemy_spawn[0]) + abs(cell[1] - self.enemy_spawn[1])
+            return min(
+                abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[1]),
+                abs(cell[0] - self.enemy_spawn[0]) + abs(cell[1] - self.enemy_spawn[1]),
+            )
 
         far_cells = sorted(walkable, key=far_doraemon, reverse=True)
         positions = random.sample(far_cells[:len(far_cells) // 2], 1)
@@ -184,7 +190,11 @@ class Level2:
                     walkable.append((j, i))
 
         def far_dorayaki(cell):
-            return abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[0]) + abs(cell[0] - self.enemy_spawn[0]) + abs(cell[1] - self.enemy_spawn[1]) + abs(cell[0] - self.doraemon[0]) + abs(cell[1] - self.doraemon[1])
+            return min(
+                abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[1]),
+                abs(cell[0] - self.doraemon[0]) + abs(cell[1] - self.doraemon[1]),
+                abs(cell[0] - self.enemy_spawn[0]) + abs(cell[1] - self.enemy_spawn[1]),
+            )
 
         far_cells = sorted(walkable, key=far_dorayaki, reverse=True)
         positions = random.sample(far_cells[:len(far_cells)], 3)
@@ -199,13 +209,25 @@ class Level2:
                     walkable.append((j, i))
 
         def far(cell):
-            return abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[1]) + abs(cell[0] - self.enemy_spawn[0]) + abs(cell[1] - self.enemy_spawn[1])
+            return min(
+                abs(cell[0] - self.player_spawn[0]) + abs(cell[1] - self.player_spawn[1]),
+                abs(cell[0] - self.enemy_spawn[0]) + abs(cell[1] - self.enemy_spawn[1]),
+            )
 
         far_cells = sorted(walkable, key=far, reverse=True)
         positions = random.sample(far_cells[:len(far_cells)], 3)
         self.paper = positions[:3]
         
     def update(self, events, screen, renderer):
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if self.game.pause_button_rect and self.game.pause_button_rect.collidepoint(event.pos):
+                        result = self.game.handle_pause_menu()
+
+                        if result == "menu":
+                            return "menu"
+                
         if self.be_catch:
             for event in events:
                 if event.type == pygame.KEYDOWN:
@@ -326,7 +348,94 @@ class Level2:
         self.be_catch = True
         self.catch.start(WIDTH // 2, HEIGHT * 0.65)
 
+    def draw_five_point_star(self, screen, x, y, outer=9, inner=4, color=(255, 255, 255)):
+        points = []
+        start = -math.pi / 2
+
+        for i in range(10):
+            angle = start + i * math.pi / 5
+            r = outer if i % 2 == 0 else inner
+            px = x + math.cos(angle) * r
+            py = y + math.sin(angle) * r
+            points.append((px, py))
+
+        pygame.draw.polygon(screen, color, points)
+
+    def draw_magic_border(self, screen):
+        maze_x = OFFSET
+        maze_y = OFFSET
+        maze_w = self.maze.cols * 30
+        maze_h = self.maze.rows * 30
+
+        gap = 15
+        corner_gap = 36
+
+        left = maze_x - gap
+        top = maze_y - gap
+        right = maze_x + maze_w + gap
+        bottom = maze_y + maze_h + gap
+
+        color = (255, 255, 255)
+        width = 2
+
+        pygame.draw.line(screen, color, (left + corner_gap, top), (right - corner_gap, top), width)
+        pygame.draw.line(screen, color, (left + corner_gap, bottom), (right - corner_gap, bottom), width)
+        pygame.draw.line(screen, color, (left, top + corner_gap), (left, bottom - corner_gap), width)
+        pygame.draw.line(screen, color, (right, top + corner_gap), (right, bottom - corner_gap), width)
+
+        self.draw_five_point_star(screen, left + 10, top + 10, 8, 3, color)
+        self.draw_five_point_star(screen, right - 10, top + 10, 8, 3, color)
+        self.draw_five_point_star(screen, left + 10, bottom - 10, 8, 3, color)
+        self.draw_five_point_star(screen, right - 10, bottom - 10, 8, 3, color)
+
+        self.draw_five_point_star(screen, left + 40, top + 8, 4, 2, color)
+        self.draw_five_point_star(screen, right - 40, top + 8, 4, 2, color)
+        self.draw_five_point_star(screen, left + 40, bottom - 8, 4, 2, color)
+        self.draw_five_point_star(screen, right - 40, bottom - 8, 4, 2, color)
+
+    def draw_side_frame(self, screen):
+        margin = 30
+        maze_border_gap = 30
+
+        maze_x = OFFSET
+        maze_y = OFFSET
+        maze_w = self.maze.cols * 30
+        maze_h = self.maze.rows * 30
+
+        x = maze_x + maze_w + maze_border_gap
+        y = margin
+        w = WIDTH - x - margin
+        h = HEIGHT - margin * 2
+
+        if w <= 0 or h <= 0:
+            return
+
+        color = (255, 255, 255)
+        width = 2
+
+        radius = 12
+
+        panel = pygame.Surface((w, h), pygame.SRCALPHA)
+        pygame.draw.rect(panel, (5, 7, 12, 220), (0, 0, w, h), border_radius=radius)
+        screen.blit(panel, (x, y))
+
+        pygame.draw.rect(screen, color, (x, y, w, h), width, border_radius=radius)
+
+        return pygame.Rect(x, y, w, h)
+
     def draw(self, renderer, screen):
+        screen.blit(renderer.background, (0, 0))
+
+        dark_overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        dark_overlay.fill((0, 0, 0, 90))
+        screen.blit(dark_overlay, (0, 0))
+
+        self.draw_magic_border(screen)
+        panel_rect = self.draw_side_frame(screen)
+
+        if panel_rect:
+            self.game.draw_pause_button(screen, panel_rect, renderer, self)
+
         if self.satisfy and self.change == False:
             gx = self.goal_x
             gy = self.goal_y
@@ -368,13 +477,14 @@ class Level2:
             else:
                 renderer.draw_path_block3(renderer.maze_surface, gy * 30, gx * 30)
 
-        screen.blit(renderer.maze_surface, (0, 0))
+        screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
 
         renderer.draw_player(screen, self.player)
         renderer.draw_enemy(screen, self.enemy)
 
         if self.respond and not self.end:
             renderer.draw_miniboss(screen, self.miniboss)
+            renderer.draw_home(screen, self.home)
         else: 
             gy, gx = self.miniboss.grid_x, self.miniboss.grid_y
 
@@ -415,9 +525,9 @@ class Level2:
                 x2 = cx + math.cos(angle) * length2
                 y2 = cy + math.sin(angle) * length2
 
-                pygame.draw.line(screen, (255, 200, 0), (x1, y1), (x2, y2), 3)
+                pygame.draw.line(screen, (255, 200, 0), (OFFSET + x1, OFFSET + y1), (OFFSET + x2, OFFSET + y2), 3)
 
-            screen.blit(img, (y * 30, x * 30))
+            screen.blit(img, (OFFSET + y * 30, OFFSET + x * 30))
 
         if self.end:
             if not self.img:
@@ -449,9 +559,9 @@ class Level2:
                     x2 = cx + math.cos(angle) * length2
                     y2 = cy + math.sin(angle) * length2
 
-                    pygame.draw.line(screen, (255, 200, 0), (x1, y1), (x2, y2), 3)
+                    pygame.draw.line(screen, (255, 200, 0), (OFFSET + x1, OFFSET + y1), (OFFSET + x2, OFFSET + y2), 3)
 
-                screen.blit(self.img[idx], (y * 30, x * 30))
+                screen.blit(self.img[idx], (OFFSET + y * 30, OFFSET + x * 30))
 
         self.catch.draw(screen)
 
@@ -483,8 +593,9 @@ class Level2:
 
                         if page >= len(pages):
                             return
-
-            screen.blit(renderer.maze_surface, (0, 0))
+                        
+            screen.blit(renderer.background, (0, 0))
+            screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
             screen.blit(overlay, (0, 0))
 
             box_w, box_h = 720, 500
@@ -567,8 +678,8 @@ class Level2:
                     if event.key == pygame.K_SPACE:
                         return
 
-            screen.blit(renderer.maze_surface, (0, 0))
-            screen.blit(overlay, (0, 0))
+            screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
+            screen.blit(overlay, (OFFSET, OFFSET))
 
             box_w, box_h = 720, 500
             box_x = (WIDTH - box_w) // 2
@@ -637,8 +748,8 @@ class Level2:
                     if event.key == pygame.K_SPACE:
                         return
 
-            screen.blit(renderer.maze_surface, (0, 0))
-            screen.blit(overlay, (0, 0))
+            screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
+            screen.blit(overlay, (OFFSET, OFFSET))
 
             box_w, box_h = 720, 500
             box_x = (WIDTH - box_w) // 2
@@ -703,8 +814,8 @@ class Level2:
                     if event.key == pygame.K_SPACE:
                         return
 
-            screen.blit(renderer.maze_surface, (0, 0))
-            screen.blit(overlay, (0, 0))
+            screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
+            screen.blit(overlay, (OFFSET, OFFSET))
 
             box_w, box_h = 720, 460
             box_x = (WIDTH - box_w) // 2
@@ -760,13 +871,16 @@ class Level2:
                     pygame.quit()
                     exit()
 
-            screen.blit(renderer.maze_surface, (0, 0))
+            screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
 
             renderer.draw_player(screen, self.player)
             renderer.draw_enemy(screen, self.enemy)
             renderer.draw_support_enemy(screen, self.support_enemy)
 
-            overlay = pygame.Surface((WIDTH, HEIGHT))
+            maze_w = self.maze.cols * 30
+            maze_h = self.maze.rows * 30
+
+            overlay = pygame.Surface((maze_w, maze_h))
             overlay.set_alpha(60)
             overlay.fill((0, 0, 0))
 
@@ -778,9 +892,9 @@ class Level2:
             shake_x = random.randint(-3, 3)
             shake_y = random.randint(-2, 2)
 
-            screen.blit(overlay, (0, 0))
+            screen.blit(overlay, (OFFSET, OFFSET))
 
-            screen.blit(img, (WIDTH // 2 - img.get_width() // 2 + shake_x, HEIGHT // 2 - img.get_height() // 2 + shake_y))
+            screen.blit(img, (OFFSET + maze_w // 2 - img.get_width() // 2 + shake_x, OFFSET + maze_h // 2 - img.get_height() // 2 + shake_y))
 
             pygame.display.flip()
             clock.tick(FPS)

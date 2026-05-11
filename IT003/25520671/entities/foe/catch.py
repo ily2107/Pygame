@@ -133,7 +133,7 @@ class Catch:
         screen.blit(img, (WIDTH//2 - img.get_width()//2, HEIGHT - 100))
 
         font = pygame.font.SysFont(None, int(50 * self.scale))
-        text = font.render("G", True, (0, 0, 0))
+        text = font.render("SPACE", True, (0, 0, 0))
         rect = text.get_rect(center=(cx, cy))
         screen.blit(text, rect)
 

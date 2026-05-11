@@ -83,6 +83,17 @@ class Renderer:
         self.support_enemy_image.set_colorkey((0, 0, 0))
         self.support_enemy_image = pygame.transform.scale(self.support_enemy_image, (30, 30))
 
+        self.background = pygame.image.load("assets/image001-16529546221552020285475.webp").convert()
+        self.background = pygame.transform.scale(self.background, (WIDTH, HEIGHT))
+
+        self.home_image = pygame.image.load("assets/nobitahouseon2015movie-1467131929535.png").convert()
+        self.home_image.set_colorkey((0, 0, 0))
+        self.home_image = pygame.transform.scale(self.home_image, (30, 30))
+
+        self.item_image1 = pygame.image.load("assets/Ma_Ma_Boo.PNG.jpg").convert()
+        self.item_image2 = pygame.image.load("assets/Gi3Fi_z3F_z3F_t%3Fk.webp").convert()
+        self.item_image3 = pygame.image.load("assets/Vongxuyenthau.webp").convert()
+
     def draw_wall_block1(self, surface, x, y):
         colors = {
             "1": (10, 45, 18), 
@@ -133,8 +144,8 @@ class Renderer:
         pygame.draw.rect(surface, (128, 196, 28), (x, y, 30, 30))
         shadow = pygame.Surface((30, 30), pygame.SRCALPHA)
 
-        pygame.draw.rect(shadow, (0,0,0,10), (0,0,30,15))
-        pygame.draw.rect(shadow, (0,0,0,30), (0,15,30,15))
+        pygame.draw.rect(shadow, (0, 0, 0, 10), (0, 0, 30, 15))
+        pygame.draw.rect(shadow, (0, 0, 0, 30), (0, 15, 30, 15))
         
         rect = self.wall_images2[type].get_rect(center=(x + 15, y + 15))
         surface.blit(self.wall_images2[type], rect)
@@ -287,16 +298,20 @@ class Renderer:
                         self.draw_path_block3(self.maze_surface, y * 30, x * 30)
         
         self.maze_surface.blit(self.exit_close_image, (game.goal_x * 30, game.goal_y * 30))
-        self.maze_surface.blit(self.doraemon_image, (game.doraemon[1] * 30, game.doraemon[0] * 30))
+        if game.game.level_cnt != 3:
+            self.maze_surface.blit(self.doraemon_image, (game.doraemon[1] * 30, game.doraemon[0] * 30))
                 
     def draw_player(self, surface, player):
-        surface.blit(self.player_image, (player.px, player.py))
+        surface.blit(self.player_image, (OFFSET + player.px, OFFSET + player.py))
 
     def draw_enemy(self, surface, enemy):
-        surface.blit(self.enemy_image, (enemy.px, enemy.py))
+        surface.blit(self.enemy_image, (OFFSET + enemy.px, OFFSET + enemy.py))
 
     def draw_support_enemy(self, surface, support_enemy):
-        surface.blit(self.support_enemy_image, (support_enemy.px, support_enemy.py))
+        surface.blit(self.support_enemy_image, (OFFSET + support_enemy.px, OFFSET + support_enemy.py))
 
     def draw_miniboss(self, surface, miniboss):
-        surface.blit(self.miniboss_image, (miniboss.px, miniboss.py))
+        surface.blit(self.miniboss_image, (OFFSET + miniboss.px, OFFSET + miniboss.py))
+
+    def draw_home(self, surface, home):
+        surface.blit(self.home_image, (OFFSET + home[0] * 30, OFFSET + home[1] * 30))
