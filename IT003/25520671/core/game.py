@@ -70,7 +70,6 @@ class Game:
         self.current_music = path
 
     def run_game(self):
-        self.show_end_game()
         running = True
 
         while running:
@@ -97,6 +96,7 @@ class Game:
             if self.game_victory:
                 if self.level_cnt == 3:
                     self.show_end_game()
+                    return "menu"
                 else:
                     self.show_game_victory()
 
