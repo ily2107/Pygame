@@ -625,11 +625,20 @@ class Level3:
             elapsed = now - self.event_boss_start_time
             progress = min(1, elapsed / self.event_boss_duration)
 
+            old_x = self.event_boss_x
+
             self.event_boss_x = self.maze.cols * 30 + 140 - progress * (self.maze.cols * 30 + 280)
 
-            if self.event_boss_row <= self.player.grid_y < self.event_boss_row + self.event_boss_scan_rows:
-                if self.event_boss_x <= self.player.grid_x * 30:
-                    self.game.game_over = True
+            player_x = self.player.grid_x * 30
+
+            in_scan_row = (
+                self.event_boss_row <= self.player.grid_y < self.event_boss_row + self.event_boss_scan_rows
+            )
+
+            boss_crossed_player = old_x >= player_x >= self.event_boss_x
+
+            if in_scan_row and boss_crossed_player:
+                self.game.game_over = True
 
             if elapsed >= self.event_boss_duration:
                 self.event_boss_active = False
