@@ -498,7 +498,7 @@ class Level3:
             if hasattr(self.enemy, "daze") and self.enemy.daze > 0:
                 self.enemy.daze -= 1
             else:
-                if time.time() - self.enemy.last_move > 0.55 - self.points // 6 * 0.05:
+                if time.time() - self.enemy.last_move > 0.5 - self.points // 6 * 0.05:
                     self.enemy.update(self.player, self.maze)
                     self.enemy.last_move = time.time()
 
@@ -625,20 +625,11 @@ class Level3:
             elapsed = now - self.event_boss_start_time
             progress = min(1, elapsed / self.event_boss_duration)
 
-            old_x = self.event_boss_x
-
             self.event_boss_x = self.maze.cols * 30 + 140 - progress * (self.maze.cols * 30 + 280)
 
-            player_x = self.player.grid_x * 30
-
-            in_scan_row = (
-                self.event_boss_row <= self.player.grid_y < self.event_boss_row + self.event_boss_scan_rows
-            )
-
-            boss_crossed_player = old_x >= player_x >= self.event_boss_x
-
-            if in_scan_row and boss_crossed_player:
-                self.game.game_over = True
+            if self.event_boss_row <= self.player.grid_y < self.event_boss_row + self.event_boss_scan_rows:
+                if self.event_boss_x <= self.player.grid_x * 30:
+                    self.game.game_over = True
 
             if elapsed >= self.event_boss_duration:
                 self.event_boss_active = False
