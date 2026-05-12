@@ -498,7 +498,7 @@ class Level3:
             if hasattr(self.enemy, "daze") and self.enemy.daze > 0:
                 self.enemy.daze -= 1
             else:
-                if time.time() - self.enemy.last_move > 0.5 - self.points // 6 * 0.05:
+                if time.time() - self.enemy.last_move > 0.55 - self.points // 6 * 0.05:
                     self.enemy.update(self.player, self.maze)
                     self.enemy.last_move = time.time()
 

@@ -252,7 +252,7 @@ class Level2:
                 self.player.update()
 
             if self.carry or self.points or self.close:
-                if time.time() - self.enemy.last_move > 0.5 - 0.15 * self.close - (self.carry + self.points) * 0.05:
+                if time.time() - self.enemy.last_move > 0.55 - 0.15 * self.close - (self.carry + self.points) * 0.05:
                     self.enemy.update(self.player, self.maze)
                     self.enemy.last_move = time.time()
 

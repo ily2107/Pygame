@@ -70,6 +70,7 @@ class Game:
         self.current_music = path
 
     def run_game(self):
+        self.show_end_game()
         running = True
 
         while running:
@@ -94,7 +95,10 @@ class Game:
                 return
 
             if self.game_victory:
-                self.show_game_victory()
+                if self.level_cnt == 3:
+                    self.show_end_game()
+                else:
+                    self.show_game_victory()
 
                 self.level_cnt += 1
 
@@ -296,6 +300,10 @@ class Game:
         pygame.quit()
     
     def show_game_victory(self):
+        sound = pygame.mixer.Sound("sounds/sfx_end.mp3")
+        sound.set_volume(0.8)
+        sound.play()
+
         self.screen_end = pygame.image.load("assets/8b7728e975e621bb4c5bd3e3729ecc42-17370298636981998921406-1737085019652-1737085019794761591577.webp").convert()
         self.screen_end = pygame.transform.scale(self.screen_end, (WIDTH, HEIGHT))
         overlay = pygame.Surface((WIDTH, HEIGHT))
@@ -309,6 +317,47 @@ class Game:
 
         text2 = font_mid.render("YOU ESCAPED JAIAN!", True, (255, 255, 255))
         text3 = font_small.render("PRESS SPACE TO TRY NEXT LEVEL", True, (180, 180, 180))
+
+        game_over = True
+        while game_over:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_over=False
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        return
+
+            self.screen.blit(self.screen_end,(0,0))
+            self.screen.blit(overlay,(0,0))
+
+            self.screen.blit(text2, (WIDTH//2 - text2.get_width()//2, 50))
+            alpha = (math.sin(pygame.time.get_ticks() * 0.005) + 1) * 127
+            img = text3.copy()
+            img.set_alpha(alpha)
+            self.screen.blit(img, (WIDTH//2 - img.get_width()//2, HEIGHT - 100))
+
+            pygame.display.update()
+        pygame.quit()
+
+    def show_end_game(self):
+        sound = pygame.mixer.Sound("sounds/sfx_end.mp3")
+        sound.set_volume(0.8)
+        sound.play()
+
+        self.screen_end = pygame.image.load("assets/z7818640483737_a019eb0eca078db509dcb6309ba2d80f.jpg").convert()
+        self.screen_end = pygame.transform.scale(self.screen_end, (WIDTH, HEIGHT))
+        overlay = pygame.Surface((WIDTH, HEIGHT))
+
+        overlay.set_alpha(100)
+        overlay.fill((0, 0, 0)) 
+
+        font_mid = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 80)
+        font_mid.set_bold(True)
+        font_small = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 40)
+
+        text2 = font_mid.render("NOBITA SURVIVED THE CHASE!", True, (255, 255, 255))
+        text3 = font_small.render("PRESS SPACE TO RETURN TO MENU", True, (180, 180, 180))
 
         game_over = True
         while game_over:
