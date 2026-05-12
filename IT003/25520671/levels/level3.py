@@ -74,7 +74,7 @@ class Level3:
 
         self.speed_boost_until = 0
         self.enemy_stun_time = 180
-
+ 
         self.static_boss_active = False
         self.static_boss_pos = None
         self.static_boss_image = pygame.image.load("assets/images.png").convert_alpha()
@@ -487,12 +487,12 @@ class Level3:
 
             if hasattr(self.enemy, "daze") and self.enemy.daze > 0:
                 self.enemy.daze -= 1
-            # else:
-                # if time.time() - self.enemy.last_move > 0.5 - self.points // 6 * 0.05:
-                #     self.enemy.update(self.player, self.maze)
-                #     self.enemy.last_move = time.time()
+            else:
+                if time.time() - self.enemy.last_move > 0.5 - self.points // 6 * 0.05:
+                    self.enemy.update(self.player, self.maze)
+                    self.enemy.last_move = time.time()
 
-            if ((self.points and self.close == False) or self.close) and self.support_enemy.daze==0 and self.detained == 0:
+            if (self.points) and self.support_enemy.daze==0 and self.detained == 0:
                 self.support_enemy.update(self.player, self.maze)
 
             if self.enemy.grid_x == self.player.grid_x and self.enemy.grid_y == self.player.grid_y:
@@ -511,6 +511,9 @@ class Level3:
                     self.dorayaki.remove(item)
                     self.points += 1
 
+                    if self.points == 15:
+                        self.show_boss(screen, renderer)
+                        
                     if self.points % 3 == 0:
                         self.dorayaki_progress += 10
                         if self.dorayaki_progress == 100:
@@ -1035,5 +1038,100 @@ class Level3:
             press_img.set_alpha(alpha)
 
             screen.blit(press_img, (WIDTH // 2 - press_img.get_width() // 2, box_y + 450))
+
+            pygame.display.flip()
+    
+    def show_boss(self, screen, renderer):
+        font_big = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 60)
+        font_small = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 30)
+        font_note = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 24)
+
+        overlay = pygame.Surface((WIDTH, HEIGHT))
+        overlay.set_alpha(120)
+        overlay.fill((0, 0, 0))
+
+        boss_data = {
+            "title": "NEW BOSS",
+            "image": "assets/images.png",  
+            "lines": [
+                "Nobita's mom is furious!",
+                "Don't let her catch you.",
+                "Her scream can terrify you and pull you toward her."
+            ],
+            "note": "You cannot control yourself while Mom's scream is active."
+        }
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        return
+
+            screen.blit(renderer.background, (0, 0))
+            screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
+            screen.blit(overlay, (0, 0))
+
+            box_w, box_h = 720, 500
+            box_x = (WIDTH - box_w) // 2
+            box_y = (HEIGHT - box_h) // 2
+
+            pygame.draw.rect(screen, (25, 25, 25), (box_x, box_y, box_w, box_h), border_radius=20)
+            pygame.draw.rect(screen, (190, 190, 190), (box_x, box_y, box_w, box_h), 3, border_radius=20)
+
+            title_color = (255, 80, 80)
+            title_text = boss_data["title"]
+
+            title = font_big.render(title_text, True, title_color)
+
+            tx = WIDTH // 2 - title.get_width() // 2
+            ty = box_y + 35
+
+            for _ in range(8):
+                ox = random.randint(-3, 3)
+                oy = random.randint(-3, 3)
+                glow = font_big.render(title_text, True, (255, 40, 40))
+                screen.blit(glow, (tx + ox, ty + oy))
+
+            screen.blit(title, (tx, ty))
+
+            y = box_y + 118
+            line_gap = 38
+            note_gap = 12
+            note_line_gap = 22
+
+            boss_img = pygame.image.load(boss_data["image"]).convert_alpha()
+            boss_img = pygame.transform.scale(boss_img, (236, 135))
+            img_rect = boss_img.get_rect(center=(WIDTH // 2, y + boss_img.get_height() // 2))
+            screen.blit(boss_img, img_rect)
+
+            y += 145
+
+            for line in boss_data["lines"]:
+                text = font_small.render(line, True, (255, 255, 255))
+                text_rect = text.get_rect(center=(WIDTH // 2, y + text.get_height() // 2))
+                screen.blit(text, text_rect)
+                y += line_gap
+
+            y += note_gap
+
+            note_text = font_note.render("Note: " + boss_data["note"], True, (160, 160, 160))
+            note_rect = note_text.get_rect(center=(WIDTH // 2, y + note_text.get_height() // 2))
+            screen.blit(note_text, note_rect)
+
+            press = font_small.render("Press SPACE to continue", True, (220, 220, 220))
+
+            alpha = (math.sin(pygame.time.get_ticks() * 0.005) + 1) * 127
+
+            press_img = press.copy()
+            press_img.set_alpha(alpha)
+
+            screen.blit(
+                press_img,
+                (WIDTH // 2 - press_img.get_width() // 2, box_y + 430)
+            )
 
             pygame.display.flip()
