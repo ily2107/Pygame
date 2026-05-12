@@ -34,6 +34,8 @@ class Level1:
         self.alpha_dir = -5
         self.sun_angle = 0
 
+        self.game.play_music("sounds/7818730694929.mp3", 0.5)
+
         self.tutorial_data = {
             "lines": [
                 "Collect Dorayaki and give them to Doraemon",
@@ -99,6 +101,7 @@ class Level1:
                         result = self.game.handle_pause_menu()
 
                         if result == "menu":
+                            pygame.mixer.music.stop()
                             return "menu"
                         
         keys = pygame.key.get_pressed()

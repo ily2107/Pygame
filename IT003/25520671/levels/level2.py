@@ -17,6 +17,8 @@ class Level2:
         self.type = 1
         self.map = random.randint(1, 3)
 
+        self.game.play_music("sounds/7818734262145.mp3", 0.5)
+
         self.maze = Maze.load_from_txt(f"maps/level2/map{self.map}.txt")
 
         self.player_spawn = (0, 0)
@@ -226,6 +228,7 @@ class Level2:
                         result = self.game.handle_pause_menu()
 
                         if result == "menu":
+                            pygame.mixer.music.stop()
                             return "menu"
                 
         if self.be_catch:
@@ -679,7 +682,7 @@ class Level2:
                         return
 
             screen.blit(renderer.maze_surface, (OFFSET, OFFSET))
-            screen.blit(overlay, (OFFSET, OFFSET))
+            screen.blit(overlay, (0, 0))
 
             box_w, box_h = 720, 500
             box_x = (WIDTH - box_w) // 2

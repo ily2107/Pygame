@@ -58,6 +58,17 @@ class Game:
                 if result == "menu":
                     break
 
+    def play_music(self, path, volume=0.5):
+        if getattr(self, "current_music", None) == path:
+            return
+
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load(path)
+        pygame.mixer.music.set_volume(volume)
+        pygame.mixer.music.play(-1)
+
+        self.current_music = path
+
     def run_game(self):
         running = True
 

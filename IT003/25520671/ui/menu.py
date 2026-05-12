@@ -52,16 +52,6 @@ class Menu:
                 exit()
 
             if self.state in ["auth", "main"]:
-                # if event.type == pygame.KEYDOWN:
-
-                #     if event.key == pygame.K_UP:
-                #         self.selected = (self.selected - 1) % len(self.options)
-
-                #     elif event.key == pygame.K_DOWN:
-                #         self.selected = (self.selected + 1) % len(self.options)
-
-                #     elif event.key == pygame.K_RETURN:
-                #         self.select()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         for i, rect in enumerate(self.option_rects):
@@ -323,6 +313,7 @@ class Menu:
         pygame.display.flip()
     
     def run(self):
+        self.game.play_music("sounds/7818730694929.mp3", 0.5)
         self.running = True
         while self.running:
             self.handle_events()

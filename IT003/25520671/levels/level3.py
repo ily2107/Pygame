@@ -16,6 +16,8 @@ class Level3:
         self.type = 2
         self.map = random.randint(1, 3)
 
+        self.game.play_music("sounds/snaptik.vn_7516189863394315527.mp3", 0.5)
+
         self.maze = Maze.load_from_txt(f"maps/level3/map{self.map}.txt")
 
         self.player_spawn = (0, 0)
@@ -55,8 +57,8 @@ class Level3:
 
         self.event_boss_active = False
         self.event_boss_last_time = pygame.time.get_ticks()
-        self.event_boss_duration = 1800
-        self.event_boss_interval = 6000
+        self.event_boss_duration = 2500
+        self.event_boss_interval = 8000
         self.event_boss_start_time = 0
         self.event_boss_row = 0
         self.event_boss_x = 0
@@ -83,6 +85,8 @@ class Level3:
         target_w = int(w * target_h / h)
 
         self.static_boss_image = pygame.transform.smoothscale(self.static_boss_image, (target_w, target_h))
+        self.static_boss_scream_sound = pygame.mixer.Sound("sounds/mama.mp3")
+        self.static_boss_scream_sound.set_volume(0.8)
 
         self.static_boss_last_scream = 0
         self.static_boss_scream_interval = 10000
@@ -416,6 +420,8 @@ class Level3:
             self.static_boss_scream_start = now
             self.static_boss_fear_until = now + 3000
 
+            self.static_boss_scream_sound.play(maxtime=3000)
+
         if now < self.static_boss_fear_until:
             if now - self.static_boss_last_fear_move >= self.static_boss_fear_move_delay:
                 self.move_player_toward_static_boss()
@@ -426,7 +432,11 @@ class Level3:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     if self.game.pause_button_rect and self.game.pause_button_rect.collidepoint(event.pos):
+                        pause_start = pygame.time.get_ticks()
+
                         result = self.game.handle_pause_menu()
+
+                        self.pause_timers(pause_start)
 
                         if result == "menu":
                             return "menu"
@@ -559,6 +569,33 @@ class Level3:
             return True
 
         return False
+
+    def pause_timers(self, pause_start):
+        paused_ms = pygame.time.get_ticks() - pause_start
+
+        self.event_boss_last_time += paused_ms
+
+        if self.event_boss_active:
+            self.event_boss_start_time += paused_ms
+
+        self.event_boss_bombs = [
+            (x, y, spawn_time + paused_ms)
+            for x, y, spawn_time in self.event_boss_bombs
+        ]
+
+        self.static_boss_last_scream += paused_ms
+
+        if self.static_boss_fear_until > 0:
+            self.static_boss_fear_until += paused_ms
+
+        if self.static_boss_scream_start > 0:
+            self.static_boss_scream_start += paused_ms
+
+        if self.player_slow_until > 0:
+            self.player_slow_until += paused_ms
+
+        if self.speed_boost_until > 0:
+            self.speed_boost_until += paused_ms
 
     def spawn_event_boss_bombs(self):
         cells = []
@@ -846,6 +883,7 @@ class Level3:
                     screen.blit(wave_surface, (OFFSET, OFFSET))
 
     def show_tutorial(self, screen, renderer, data):
+        pause_start = pygame.time.get_ticks()
         font_big = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 60)
         font_small = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 30)
         font_note = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 24)
@@ -857,7 +895,7 @@ class Level3:
         pages = data["pages"]
         page = 0
 
-        while True:
+        while True:            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -955,6 +993,7 @@ class Level3:
             pygame.display.flip()
 
     def show_item_note(self, screen, renderer, data):
+        pause_start = pygame.time.get_ticks()
         font_big = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 60)
         font_small = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 25)
         font_note = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 22)
@@ -971,6 +1010,7 @@ class Level3:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
+                        self.pause_timers(pause_start)
                         return
 
             screen.blit(renderer.background, (0, 0))
@@ -1042,6 +1082,7 @@ class Level3:
             pygame.display.flip()
     
     def show_boss(self, screen, renderer):
+        pause_start = pygame.time.get_ticks()
         font_big = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 60)
         font_small = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 30)
         font_note = pygame.font.Font("assets/Baloo2-VariableFont_wght.ttf", 24)
@@ -1069,6 +1110,7 @@ class Level3:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
+                        self.pause_timers(pause_start)
                         return
 
             screen.blit(renderer.background, (0, 0))
