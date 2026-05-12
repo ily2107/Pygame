@@ -51,11 +51,11 @@ class Catch:
         self.last_press_time = now
 
         if delta < 0.12:
-            gain = 3.5
+            gain = 10
         elif delta < 0.2:
-            gain = 2.5
+            gain = 8
         else:
-            gain = 1.5
+            gain = 6.5
 
         self.progress += gain
 
@@ -132,7 +132,7 @@ class Catch:
         img.set_alpha(alpha)
         screen.blit(img, (WIDTH//2 - img.get_width()//2, HEIGHT - 100))
 
-        font = pygame.font.SysFont(None, int(50 * self.scale))
+        font = pygame.font.SysFont(None, int(30 * self.scale))
         text = font.render("SPACE", True, (0, 0, 0))
         rect = text.get_rect(center=(cx, cy))
         screen.blit(text, rect)
